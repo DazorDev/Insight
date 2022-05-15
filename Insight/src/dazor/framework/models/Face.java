@@ -139,7 +139,6 @@ public class Face {
 	public void rotateLocal(Quaternion inputQuaternion) {
 		for(Vertex vertex : this.getVerticies()) {
 			inputQuaternion.rotateLocal(vertex.getPosition());
-//			inputQuaternion.rotateLocal(vertex.getUvCoordinates());
 //			inputQuaternion.rotateLocal(vertex.getNormal());
 		}
 	}

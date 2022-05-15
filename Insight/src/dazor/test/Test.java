@@ -113,11 +113,11 @@ public class Test {
 						Mesh mesh = ObjLoader.load(chooser.getSelectedFile().toString());
 						view.setPolygons(mesh.getPolygons());
 						view.update(q, offset);
+						return;
 					}
 					try {
 						image = ImageIO.read(chooser.getSelectedFile());
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -283,15 +283,15 @@ public class Test {
 			processedPolygons.sort( (f1, f2) -> {
 				return -1*Float.compare(f1.getZ(), f2.getZ());
 			});
-			if(image != null) {
-				AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
-				tx.translate(0, -image.getHeight(null));
-				AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-				newImage = op.filter(image, null);
-				processedPolygons.forEach( polygon -> {	
-					polygon.paintImagePolygon(g, newImage);
-				});
+			if(image == null) {
+				return;
 			}
+			newImage = rotateImage(image);
+			g.drawImage(newImage, 0, 0, null);
+			processedPolygons.forEach( polygon -> {	
+				polygon.drawUVMap(g, newImage);
+//				polygon.paintImagePolygon(g, newImage);
+			});
 		}
 	}
 	
@@ -299,5 +299,12 @@ public class Test {
 	    return Optional.ofNullable(filename)
 	      .filter(f -> f.contains("."))
 	      .map(f -> f.substring(filename.lastIndexOf(".") + 1));
+	}
+	
+	private static BufferedImage rotateImage(BufferedImage image) {
+		AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
+		tx.translate(0, -image.getHeight(null));
+		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+		return op.filter(image, null);
 	}
 }
