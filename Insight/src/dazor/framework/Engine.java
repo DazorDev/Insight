@@ -1,19 +1,26 @@
 package dazor.framework;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import dazor.api.IRenderHandler;
 import dazor.api.Insight;
 import dazor.framework.models.Camera;
 import dazor.framework.models.Mesh;
+import dazor.framework.rendering.Renderer;
 import dazor.framework.util.JFrameHelper;
 
 public class Engine implements Insight {
 
 	JFrame frame;
+	JPanel panel;
 	IRenderHandler renderHandler;
+	
+	ArrayList<Camera> cameras = new ArrayList<>();
+	Camera activeCamera;
 	
 	public Engine() {
 	}
@@ -49,6 +56,7 @@ public class Engine implements Insight {
 			return;
 		}
 		frame = new JFrame(title);
+		frame.setIgnoreRepaint(true);
 		frame.setSize(dimension);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(3);
@@ -80,36 +88,67 @@ public class Engine implements Insight {
 
 	@Override
 	public void removeMesh(int meshIndex) {
-
+		this.renderHandler.removeMesh(meshIndex);
 	}
 
 	@Override
 	public Mesh getMesh(int meshIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.renderHandler.getMesh(meshIndex);
 	}
 
 	@Override
 	public void addCamera(Camera camera) {
-		// TODO Auto-generated method stub
+		if(cameras.isEmpty()) {
+			activeCamera = camera;
+		}
 		
+		if(renderHandler != null) {
+			renderHandler.setCamera(activeCamera);
+		}
+		
+		cameras.add(camera);
 	}
 
 	@Override
 	public void removeCamera(int cameraIndex) {
-		// TODO Auto-generated method stub
-		
+		if(activeCamera == cameras.get(cameraIndex)) {
+			return;
+		}
+		cameras.remove(cameraIndex);
 	}
 
 	@Override
 	public Camera getCamera(int cameraIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		return cameras.get(cameraIndex);
 	}
 
 	@Override
+	public Camera getActiveCamera() {
+		return activeCamera;
+	}
+
+	@Override
+	public void setActiveCamera(Camera camera) {
+		addCamera(camera);
+		this.activeCamera = camera;
+	}
+
+	@Override
+	public void setActiveCamera(int cameraIndex) {
+		this.activeCamera = cameras.get(cameraIndex);
+	}
+	
+	@Override
 	public void setRenderHandler(IRenderHandler handler) {
-		// TODO Auto-generated method stub
+		if(handler == null) {
+			handler = new Renderer();
+		}
+		
+		this.renderHandler = handler;
+		
+		if(renderHandler.getCamera() == null && this.activeCamera != null) {
+			renderHandler.setCamera(activeCamera); 
+		};
 		
 	}
 
@@ -117,5 +156,6 @@ public class Engine implements Insight {
 	public IRenderHandler getRenderHandler() {
 		return this.renderHandler;
 	}
+
 
 }

@@ -77,6 +77,23 @@ public class Vec2f {
 		this.y *= factor;
 	}
 	
+	public Vec2f scale(float factor1, float factor2) {
+		return scale(factor1, factor2, null);
+	}
+	
+	public Vec2f scale(float factor1, float factor2, Vec2f outputVector) {
+		if(outputVector == null) {
+			outputVector = new Vec2f(this.x,this.y);
+		}
+		outputVector.scaleLocal(factor1,factor2);
+		return outputVector;
+	}
+	
+	public void scaleLocal(float factor1, float factor2) {
+		this.x *= factor1;
+		this.y *= factor2;
+	}
+	
 	public Vec2f normalize() {
 		return normalize(null);
 	}

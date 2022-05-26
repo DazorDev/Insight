@@ -139,7 +139,6 @@ public class Face {
 	public void rotateLocal(Quaternion inputQuaternion) {
 		for(Vertex vertex : this.getVerticies()) {
 			inputQuaternion.rotateLocal(vertex.getPosition());
-//			inputQuaternion.rotateLocal(vertex.getNormal());
 		}
 	}
 	
@@ -207,6 +206,7 @@ public class Face {
 		}		
 		g.setClip(p);
 		g.drawImage(image, (int)minPosX, (int)minPosY,(int)maxPosX,(int)maxPosY,(int)(minSourceX*image.getWidth()),(int)(minSourceY*image.getHeight()),(int)(maxSourceX*image.getWidth()),(int)(maxSourceY*image.getHeight()),null);
+		g.setClip(null);
 	}
 	
 	public void drawUVMap(Graphics g,BufferedImage image) {

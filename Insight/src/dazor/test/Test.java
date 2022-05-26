@@ -42,7 +42,7 @@ public class Test {
 	static BufferedImage newImage;
 	public static void main(String[] args) {
 		Quaternion q = new Quaternion(1,0,0,0);	
-		Vec3f offset = new Vec3f();
+		Vec3f offset = new Vec3f(500,500,0);
 		JFrame f = new JFrame();
 		f.setSize(1000,1000);
 		f.setDefaultCloseOperation(3);
@@ -51,7 +51,7 @@ public class Test {
 		JFileChooser chooser = new JFileChooser();
 
 		chooser.setVisible(false);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Obj and Png", "obj", "png");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Obj and image", "obj", "png","jpg");
 		chooser.setFileFilter(filter);
 		chooserFrame.getContentPane().add(chooser);
 		chooserFrame.pack();
@@ -107,6 +107,7 @@ public class Test {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				System.out.println(chooser.getSelectedFile().toString());
 				if(chooser.accept(chooser.getSelectedFile())) {
 					if(getExtensionByStringHandling(chooser.getSelectedFile().toString()).get().equals("obj")) {
 						System.out.println("kkkk");
@@ -265,6 +266,10 @@ public class Test {
 		public void update(Quaternion q, Vec3f offset) {
 			
 			processing = true;
+			if(image != null) {
+				newImage = rotateImage(image);
+//				newImage = ImageRotation.rotateImage(q, newImage);
+			}
 			for(int i=0; i!= oldFaces.size(); i++) {
 				processedPolygons.set(i, oldFaces.get(i).rotate(q));
 				processedPolygons.get(i).scale(globalScale);
@@ -284,13 +289,14 @@ public class Test {
 				return -1*Float.compare(f1.getZ(), f2.getZ());
 			});
 			if(image == null) {
+				System.out.println("no image");
 				return;
 			}
-			newImage = rotateImage(image);
 			g.drawImage(newImage, 0, 0, null);
 			processedPolygons.forEach( polygon -> {	
 				polygon.drawUVMap(g, newImage);
-//				polygon.paintImagePolygon(g, newImage);
+				polygon.paintImagePolygon(g, newImage);
+				polygon.drawPolygon(g);
 			});
 		}
 	}

@@ -45,6 +45,17 @@ public class Vec3f {
 		vec[1] = this.y = y;
 		vec[2] = this.z = z;
 	}
+
+	/**
+	 * Creates a Vec3f with 3 given floats as Positions in 3d space.
+	 * This is the final constructor which will be called
+	 * @param x the x position of the Vector
+	 * @param y the y position of the Vector
+	 * @param z the z position of the Vector
+	 */
+	public Vec3f(float[] floatArray) {
+		this(floatArray[0],floatArray[1],floatArray[2]);
+	}
 	
 	/**
 	 * Basic Construct which takes in doubles and casts them down to floats
@@ -66,6 +77,19 @@ public class Vec3f {
 		this.x = x;
 		this.y = y;
 		this.z = z;	
+	}
+	
+	/**
+	 * Sets all the Positions of the Vector
+	 * @param x the new position of the x vector
+	 * @param y the new position of the y vector
+	 * @param z the new position of the z vector
+	 */
+	public void set(float[] floatValues) {
+		if(floatValues.length != 3) {
+			return;
+		}
+		set(floatValues[0],floatValues[1],floatValues[2]);
 	}
 	
 	/**
@@ -304,11 +328,11 @@ public class Vec3f {
 	}
 
 	public void setX(float x) {
-		this.x = x;
+		this.x = vec[0] = x;
 	}
 	
 	public void setX(double x) {
-		this.x = (float) x;
+		this.x = vec[0]  = (float) x;
 	}
 
 	public float getY() {
@@ -316,11 +340,11 @@ public class Vec3f {
 	}
 
 	public void setY(float y) {
-		this.y = y;
+		this.y = vec[1]  = y;
 	}
 	
 	public void setY(double y) {
-		this.y = (float) y;
+		this.y = vec[1]  = (float) y;
 	}
 
 	public float getZ() {
@@ -328,11 +352,11 @@ public class Vec3f {
 	}
 
 	public void setZ(float z) {
-		this.z = z;
+		this.z = vec[2]  = z;
 	}
 	
 	public void setZ(double z) {
-		this.z = (float) z;
+		this.z = vec[2]  = (float) z;
 	}
 	
 	/**

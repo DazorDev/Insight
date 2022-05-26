@@ -21,27 +21,59 @@ public class Transform {
 	 */
 	Vec3f scaleFactor;
 	
+	/**
+	 * 
+	 */
 	public Transform() {
 		this(null,null,null);
 	}
 	
+	/**
+	 * 
+	 * @param rotation
+	 */
 	public Transform(Quaternion rotation) {
 		this(rotation,null,null);
 	}
 	
+	/**
+	 * 
+	 * @param position
+	 */
 	public Transform(Vec3f position) {
 		this(null,position,null);
 	}
 	
+	/**
+	 * 
+	 * @param rotation
+	 * @param position
+	 */
 	public Transform(Quaternion rotation, Vec3f position) {
 		this(rotation,position,null);
 	}
 
+	/**
+	 * 
+	 * @param position
+	 * @param scale
+	 */
 	public Transform(Vec3f position, Vec3f scale) {
 		this(null,position,scale);
 	}
 
+	public Transform(Transform transform) {
+		this.rotationOfObject = new Quaternion(transform.rotationOfObject);
+		this.positionIn3dSpace = new Vec3f(transform.positionIn3dSpace);
+		this.scaleFactor = new Vec3f(transform.scaleFactor);
+	}
 	
+	/**
+	 * 
+	 * @param rotation
+	 * @param position
+	 * @param scale
+	 */
 	public Transform(Quaternion rotation, Vec3f position, Vec3f scale) {
 		
 		if(rotation == null) {
@@ -93,10 +125,18 @@ public class Transform {
 		this.positionIn3dSpace = positionIn3dSpace;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Vec3f getScale() {
 		return scaleFactor;
 	}
 
+	/**
+	 * 
+	 * @param scaleFactor
+	 */
 	public void setScale(Vec3f scaleFactor) {
 		this.scaleFactor = scaleFactor;
 	}

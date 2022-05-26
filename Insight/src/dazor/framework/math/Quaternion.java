@@ -110,7 +110,7 @@ public class Quaternion {
     
     public void normalizeLocal() {
     	if(x == 0 && y == 0 && z == 0 && w == 0) {
-    		set(1, 0, 0, 0);
+    		set(0, 1, 0, 0);
     	}
     	scaleLocal(1 / getSize());
     }

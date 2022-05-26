@@ -127,6 +127,24 @@ public interface Insight {
 	
 	/**
 	 * 
+	 * @return
+	 */
+	public Camera getActiveCamera();
+	
+	/**
+	 * Adds a Camera to the Engine and after that sets this Camera as the active Camera for the Engine
+	 * @param camera
+	 */
+	public void setActiveCamera(Camera camera);
+	
+	/**
+	 * 
+	 * @param cameraIndex
+	 */
+	public void setActiveCamera(int cameraIndex);
+	
+	/**
+	 * 
 	 * @param handler
 	 */
 	public void setRenderHandler(IRenderHandler handler);

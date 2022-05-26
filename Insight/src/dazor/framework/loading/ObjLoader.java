@@ -1,9 +1,9 @@
 package dazor.framework.loading;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 
-import dazor.framework.math.Quaternion;
 import dazor.framework.math.Vec2f;
 import dazor.framework.math.Vec3f;
 import dazor.framework.math.Vertex;
@@ -16,6 +16,24 @@ public class ObjLoader {
 		Mesh loadedMesh = new Mesh();
 		
 		try (BufferedReader reader = new BufferedReader(new FileReader(fileUrl))) {
+		    String line;
+		    while ((line = reader.readLine()) != null) {
+		    	System.out.println(line);
+		    	String[] tokens = line.split(" ");
+		    	handleToken(tokens,loadedMesh);
+		    }
+		    System.out.println(loadedMesh.getPolygons());
+		    return loadedMesh;	    
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static Mesh load(File file) {
+		Mesh loadedMesh = new Mesh();
+		
+		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 		    String line;
 		    while ((line = reader.readLine()) != null) {
 		    	String[] tokens = line.split(" ");
@@ -41,6 +59,9 @@ public class ObjLoader {
 		}
 		
 		if(tokens[0].equals("vn")) {
+			for(String t : tokens) {
+				System.out.println(t);
+			}
 			loadedMesh.addNormalPoints(new Vec3f(Float.valueOf(tokens[1]),Float.valueOf(tokens[2]),Float.valueOf(tokens[3])));
 			return;
 		}
