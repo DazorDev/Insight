@@ -126,4 +126,12 @@ public class Vec2f {
 		this.y = y;
 	}
 	
+	/**
+	 * This Override is basically a JSON representation
+	 */
+	@Override
+	public String toString() {
+		return "\""+this.getClass().getName()+"\""+" : { \n\t\"x\" = "+x+", \n\t\"y\" = "+y+", \n}";
+	}
+	
 }

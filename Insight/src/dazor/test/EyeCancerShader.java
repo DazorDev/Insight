@@ -35,7 +35,6 @@ public class EyeCancerShader implements IShader {
 		uv.scaleLocal(120f);
 		float col = (float) (uv.getX() * uv.getY() + t * 180);
 		Vec3f tempVec = new Vec3f(val2col((int) (col)));
-		tempVec.scaleLocal(255f);
 		return tempVec;
 	}
 	
@@ -48,7 +47,7 @@ public class EyeCancerShader implements IShader {
 	    if(v >= 180f) return new Vec3f(0.f  , 1.f-c, 1.f  );
 	    if(v >= 120f) return new Vec3f(0.f  , 1.f  ,    c);
 	    if(v >=  60f) return new Vec3f(1.f-c, 1.f  , 0.f  );
-	                 return new Vec3f(1.f  ,    c, 0.f  );
+	                  return new Vec3f(1.f  ,    c, 0.f  );
 	}
 
 	@Override

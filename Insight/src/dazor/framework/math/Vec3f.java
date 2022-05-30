@@ -74,9 +74,9 @@ public class Vec3f {
 	 * @param z the new position of the z vector
 	 */
 	public void set(float x,float y, float z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;	
+		this.x = vec[0] = x;
+		this.y = vec[1] = y;
+		this.z = vec[2] = z;	
 	}
 	
 	/**
@@ -100,15 +100,28 @@ public class Vec3f {
 	 * @param factor
 	 */
 	public void scaleLocal(double factor) {
-		this.x *= factor;
-		this.y *= factor;
-		this.z *= factor;
+		this.x = vec[0] *= factor;
+		this.y = vec[1] *= factor;
+		this.z = vec[2] *= factor;
+	}
+	
+	/**
+	 * Scales the Vector by a given factor
+	 * Scaling is basically a simple multiplication with 
+	 * the position for example we multiply {@link #x} with 
+	 * the given factor to scale it up to the factor
+	 * @param factor
+	 */
+	public void scaleLocal(float factor) {
+		this.x = vec[0] *= factor;
+		this.y = vec[1] *= factor;
+		this.z = vec[2] *= factor;
 	}
 	
 	/**
 	 * Creates a new Vector which will be scaled to the Factor given in
 	 * Scaling is basically a simple multiplication with 
-	 * the position for example we multiply {@link #x} with 
+	 * the position for example we multiply {@link #x},{@link #y} and {@link #z} with 
 	 * the given factor to scale it up to the factor
 	 * @param factor
 	 */
@@ -217,9 +230,9 @@ public class Vec3f {
 	 * @param inputVector
 	 */
 	public void addLocal(Vec3f inputVector) {
-		this.x += inputVector.getX();
-		this.y += inputVector.getY();
-		this.z += inputVector.getZ();
+		this.x = vec[0] += inputVector.getX();
+		this.y = vec[1] += inputVector.getY();
+		this.z = vec[2] += inputVector.getZ();
 	}
 	
 	/**
@@ -251,9 +264,9 @@ public class Vec3f {
 	 * @param inputVector
 	 */
 	public void addLocal(float x, float y, float z) {
-		this.x += x;
-		this.y += y;
-		this.z += z;
+		this.x = vec[0] += x;
+		this.y = vec[1] += y;
+		this.z = vec[2] += z;
 	}
 	
 	/**
@@ -285,9 +298,9 @@ public class Vec3f {
 	 * @param inputVector
 	 */
 	public void subtractLocal(Vec3f inputVector) {
-		this.x -= inputVector.getX();
-		this.y -= inputVector.getY();
-		this.z -= inputVector.getZ();
+		this.x = vec[0] -= inputVector.getX();
+		this.y = vec[1] -= inputVector.getY();
+		this.z = vec[2] -= inputVector.getZ();
 	}
 	
 	/**

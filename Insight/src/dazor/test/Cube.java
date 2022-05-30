@@ -5,13 +5,14 @@ import java.util.ArrayList;
 
 import dazor.framework.math.Quaternion;
 import dazor.framework.math.Vec3f;
-import dazor.framework.models.OldFace;
+import dazor.framework.math.Vertex;
+import dazor.framework.models.Face;
 
 public class Cube {
 
 	static int i =0;
 	
-	ArrayList<OldFace> oldFaces = new ArrayList<>();
+	ArrayList<Face> oldFaces = new ArrayList<>();
 	
 	public Cube() {
 		this(Color.black, 0,0,0);
@@ -23,40 +24,11 @@ public class Cube {
 	}
 	
 	public Cube(Color color,int x, int y, int z) {
-//		Polygon p0 = new Polygon(color,  new Vec3f(0+x,0+y,0+z), new Vec3f(0+x,0+y,1+z), new Vec3f(0+x,1+y,0+z));
-//		Polygon p1 = new Polygon(color,  new Vec3f(0+x,1+y,0+z), new Vec3f(0+x,1+y,1+z), new Vec3f(0+x,0+y,1+z));
-//		Polygon p2 = new Polygon(color,  new Vec3f(1+x,1+y,1+z), new Vec3f(1+x,1+y,0+z), new Vec3f(1+x,0+y,1+z));
-//		Polygon p3 = new Polygon(color,  new Vec3f(1+x,0+y,1+z), new Vec3f(1+x,0+y,0+z), new Vec3f(1+x,1+y,0+z));
-//		Polygon p4 = new Polygon(color,  new Vec3f(0+x,0+y,0+z), new Vec3f(1+x,0+y,0+z), new Vec3f(0+x,1+y,0+z));
-//		Polygon p5 = new Polygon(color,  new Vec3f(0+x,1+y,0+z), new Vec3f(1+x,0+y,0+z), new Vec3f(1+x,1+y,0+z));
-//		Polygon p6 = new Polygon(color,  new Vec3f(1+x,1+y,1+z), new Vec3f(0+x,1+y,1+z), new Vec3f(1+x,0+y,1+z));
-//		Polygon p7 = new Polygon(color,  new Vec3f(1+x,0+y,1+z), new Vec3f(0+x,1+y,1+z), new Vec3f(0+x,0+y,1+z));
-//		Polygon p8 = new Polygon(color,  new Vec3f(0+x,1+y,0+z), new Vec3f(1+x,1+y,0+z), new Vec3f(1+x,1+y,1+z));
-//		Polygon p9 = new Polygon(color,  new Vec3f(0+x,1+y,1+z), new Vec3f(0+x,1+y,0+z), new Vec3f(1+x,1+y,1+z));
-//		Polygon p10 = new Polygon(color, new Vec3f(1+x,0+y,1+z), new Vec3f(0+x,0+y,1+z), new Vec3f(0+x,0+y,0+z));
-//		Polygon p11 = new Polygon(color, new Vec3f(1+x,0+y,0+z), new Vec3f(1+x,0+y,1+z), new Vec3f(0+x,0+y,0+z));
-	
-		OldFace p0 = new OldFace(new Vec3f( 1.000000, -1.000000, -1.000000),
-								 new Vec3f( 1.000000, -1.000000,  1.000000),
-								 new Vec3f(-1.000000, -1.000000,  1.000000),
-								 new Vec3f(-1.000000, -1.000000, -1.000000),
-								 new Vec3f( 1.000000,  1.000000, -0.999999),
-								 new Vec3f( 0.999999,  1.000000,  1.000001),
-								 new Vec3f(-1.000000,  1.000000,  1.000000),
-								 new Vec3f(-1.000000,  1.000000, -1.000000));
-		
+		Face p0 = new Face();
+		p0.addVertex(new Vertex(new Vec3f(1,0,0)));
+		p0.addVertex(new Vertex(new Vec3f(0,1,0)));
+		p0.addVertex(new Vertex(new Vec3f(1,1,0)));
 		oldFaces.add(p0);
-//		polygons.add(p1);
-//		polygons.add(p2);
-//		polygons.add(p3);
-//		polygons.add(p4);
-//		polygons.add(p5);
-//		polygons.add(p6);
-//		polygons.add(p7);
-//		polygons.add(p8);
-//		polygons.add(p9);
-//		polygons.add(p10);
-//		polygons.add(p11);
 		oldFaces.sort( (v1, v2) -> {
 			return Float.compare(v1.getZ(),v2.getZ());
 		});
@@ -65,25 +37,25 @@ public class Cube {
 	
 	public float getZ() {
 		float sum = 0;
-		for(OldFace p : oldFaces) {
+		for(Face p : oldFaces) {
 			sum += p.getZ();
 		}
 		return sum;
 	}
 	
-	public ArrayList<OldFace> getPolygons() {
+	public ArrayList<Face> getPolygons() {
 		return this.oldFaces;
 	}
 	
-	public void setPolygons(ArrayList<OldFace> oldFaces) {
+	public void setPolygons(ArrayList<Face> oldFaces) {
 		this.oldFaces = oldFaces;
 	}
 	
 	public Cube rotate(Quaternion q,Vec3f offset, float scale) {
 		Cube c = new Cube();
-		ArrayList<OldFace> newPolys = new ArrayList<>();
+		ArrayList<Face> newPolys = new ArrayList<>();
 		this.oldFaces.forEach( polygon -> {
-			newPolys.add(polygon.rotate(q,offset,scale));
+			newPolys.add(polygon.rotate(q));
 		});
 		c.setPolygons(newPolys);
 		return c;

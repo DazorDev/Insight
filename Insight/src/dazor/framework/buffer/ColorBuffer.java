@@ -1,7 +1,5 @@
 package dazor.framework.buffer;
 
-import java.awt.Color;
-
 import dazor.framework.math.Vec3f;
 
 /**
@@ -80,18 +78,18 @@ public class ColorBuffer {
 	 * Sets the rgb values at screenposition x,y inside {@link #data} to the r g b values given as parameter
 	 * @param x horizontal position on screen
 	 * @param y vertical position on screen
-	 * @param r red value which ranges from 0 - 255
-	 * @param g green value which ranges from 0 - 255
-	 * @param b green value which ranges from 0 - 255
+	 * @param r red value which ranges from 0 - 1f
+	 * @param g green value which ranges from 0 - 1f
+	 * @param b green value which ranges from 0 - 1f
 	 */
 	public void setColor(int x, int y, float r, float g, float b) {
 		//Get the Pixel coordinate
 		int dataPos = getDataPos(x, y);
 		
 		//Sets the individual rgb values to the corresponding place inside the array
-		data[dataPos] = r;
-		data[dataPos+1] = g;
-		data[dataPos+2] = b;
+		data[dataPos]   = r*255f;
+		data[dataPos+1] = g*255f;
+		data[dataPos+2] = b*255f;
 	}
 	
 	/**
@@ -194,10 +192,14 @@ public class ColorBuffer {
 		return rgb;
 	}
 	
-	public float[] getColorFromInt(int C) {
-		float B = C % 256f;
-		float G = ((C-B)/256f) % 256f;
-		float R = ((C-B)/256f*256f) - G/256f;
-		return new float[] {R,G,B};
+	public float[] getColorFromInt(int rgbInt) {
+		float red = (rgbInt >> 16) & 0xFF;
+		float green = (rgbInt >> 8) & 0xFF;
+		float blue = rgbInt & 0xFF;
+		red /= 255f;
+		green /= 255f;
+		blue /= 255f;
+		return new float[] {red,green,blue};
 	}
+	
 }

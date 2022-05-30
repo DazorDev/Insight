@@ -51,6 +51,14 @@ public class Vertex {
 	/**
 	 * 
 	 * @param position
+	 */
+	public Vertex(Vec3f position, Vec2f uv) {
+		this(position,uv,null);
+	}
+	
+	/**
+	 * 
+	 * @param position
 	 * @param uv
 	 */
 	public Vertex(Vec3f position, Vec2f uv, Vec3f normal) {
