@@ -205,7 +205,7 @@ public class Face {
 			
 		}		
 		g.setClip(p);
-		g.drawImage(image, (int)minPosX, (int)minPosY,(int)maxPosX,(int)maxPosY,(int)(minSourceX*image.getWidth()),(int)(minSourceY*image.getHeight()),(int)(maxSourceX*image.getWidth()),(int)(maxSourceY*image.getHeight()),null);
+		g.drawImage(image, (int)minPosX, (int)minPosY,(int)maxPosX,(int)maxPosY,(int)(minSourceX*image.getWidth()-1),(int)(minSourceY*image.getHeight()-1),(int)(maxSourceX*image.getWidth()-1),(int)(maxSourceY*image.getHeight()-1),null);
 		g.setClip(null);
 	}
 	

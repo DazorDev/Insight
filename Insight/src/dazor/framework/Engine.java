@@ -3,10 +3,10 @@ package dazor.framework;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
+import javax.management.RuntimeErrorException;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
-import dazor.api.IRenderHandler;
+import dazor.api.IShader;
 import dazor.api.Insight;
 import dazor.framework.models.Camera;
 import dazor.framework.models.Mesh;
@@ -16,18 +16,19 @@ import dazor.framework.util.JFrameHelper;
 public class Engine implements Insight {
 
 	JFrame frame;
-	JPanel panel;
-	IRenderHandler renderHandler;
-	
+	Renderer renderHandler;
 	ArrayList<Camera> cameras = new ArrayList<>();
 	Camera activeCamera;
 	
+	private boolean isRunning = false;
+	
 	public Engine() {
+		
 	}
 	
 	private Engine(Insight insight) {
 		this.frame = insight.getWindow();
-		this.renderHandler = insight.getRenderHandler();
+		
 	}
 	
 	@Override
@@ -60,7 +61,11 @@ public class Engine implements Insight {
 		frame.setSize(dimension);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(3);
+		renderHandler = new Renderer(dimension.width,dimension.height);
+		
 	}
+	
+	
 	
 	@Override
 	public void toggleWindow() {
@@ -137,25 +142,41 @@ public class Engine implements Insight {
 	public void setActiveCamera(int cameraIndex) {
 		this.activeCamera = cameras.get(cameraIndex);
 	}
+
+	@Override
+	public void addShader(IShader shader) {
+		this.renderHandler.addShader(shader);
+	}
+
+	@Override
+	public IShader getShader(int shaderIndex) {
+		return renderHandler.getShader(shaderIndex);
+	}
+
+	@Override
+	public int getShaderAmount() {
+		return renderHandler.getShaderAmount();
+	}
 	
 	@Override
-	public void setRenderHandler(IRenderHandler handler) {
-		if(handler == null) {
-			handler = new Renderer();
-		}
+	public void render() {
 		
-		this.renderHandler = handler;
-		
-		if(renderHandler.getCamera() == null && this.activeCamera != null) {
-			renderHandler.setCamera(activeCamera); 
+		Runnable runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+				while(true) {
+					renderHandler.render(frame.getGraphics());
+				}
+			}
 		};
 		
+		Thread t = new Thread(runnable);
+		t.start();
 	}
 
 	@Override
-	public IRenderHandler getRenderHandler() {
-		return this.renderHandler;
+	public boolean isRunning() {
+		return isRunning;
 	}
-
-
 }

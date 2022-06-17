@@ -65,16 +65,6 @@ public class ColorBuffer {
 	}
 	
 	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @param rgb
-	 */
-	public void setColor(int x, int y, int rgb) {
-		
-	}
-	
-	/**
 	 * Sets the rgb values at screenposition x,y inside {@link #data} to the r g b values given as parameter
 	 * @param x horizontal position on screen
 	 * @param y vertical position on screen
@@ -149,7 +139,7 @@ public class ColorBuffer {
 		//After that return the color
 		return col;
 	}
-
+	
 	/**
 	 * Return the Color values of the Pixel with the given coordinates
 	 * @param x the horizontal position

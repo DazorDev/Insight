@@ -30,6 +30,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import dazor.framework.loading.ObjLoader;
+import dazor.framework.math.ImageRotation;
 import dazor.framework.math.Quaternion;
 import dazor.framework.math.Vec3f;
 import dazor.framework.models.Face;
@@ -268,7 +269,6 @@ public class Test {
 			processing = true;
 			if(image != null) {
 				newImage = rotateImage(image);
-//				newImage = ImageRotation.rotateImage(q, newImage);
 			}
 			for(int i=0; i!= oldFaces.size(); i++) {
 				processedPolygons.set(i, oldFaces.get(i).rotate(q));
@@ -292,11 +292,12 @@ public class Test {
 				System.out.println("no image");
 				return;
 			}
+			newImage = rotateImage(newImage);
 			g.drawImage(newImage, 0, 0, null);
 			processedPolygons.forEach( polygon -> {	
 				polygon.drawUVMap(g, newImage);
 				polygon.paintImagePolygon(g, newImage);
-				polygon.drawPolygon(g);
+//				polygon.drawPolygon(g);
 			});
 		}
 	}

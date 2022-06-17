@@ -229,4 +229,73 @@ public interface IShader {
 	default void multiplyColorLocal(Vec3f inputRGB, float value) {
 		inputRGB.scaleLocal(value);
 	}
+
+	default Vec3f cos(Vec3f inputRGB) {
+		return cos(inputRGB, null);
+	}
+	
+	default Vec3f cos(Vec3f inputRGB, Vec3f outputRGB) {
+		if(outputRGB == null) {
+			outputRGB = new Vec3f();
+		}
+		
+		outputRGB.setX(Math.cos(inputRGB.getX()));
+		outputRGB.setY(Math.cos(inputRGB.getY()));
+		outputRGB.setZ(Math.cos(inputRGB.getZ()));
+		
+
+		return outputRGB;
+	}
+	
+	default void cosLocal(Vec3f inputRGB) {
+		inputRGB.setX(Math.cos(inputRGB.getX()));
+		inputRGB.setY(Math.cos(inputRGB.getY()));
+		inputRGB.setZ(Math.cos(inputRGB.getZ()));
+	}
+	
+	default Vec3f sin(Vec3f inputRGB) {
+		return sin(inputRGB, null);
+	}
+	
+	default Vec3f sin(Vec3f inputRGB, Vec3f outputRGB) {
+		if(outputRGB == null) {
+			outputRGB = new Vec3f();
+		}
+		
+		outputRGB.setX(Math.sin(inputRGB.getX()));
+		outputRGB.setY(Math.sin(inputRGB.getY()));
+		outputRGB.setZ(Math.sin(inputRGB.getZ()));
+		
+
+		return outputRGB;
+	}
+	
+	default void sinLocal(Vec3f inputRGB) {
+		inputRGB.setX(Math.sin(inputRGB.getX()));
+		inputRGB.setY(Math.sin(inputRGB.getY()));
+		inputRGB.setZ(Math.sin(inputRGB.getZ()));
+	}
+	
+	default Vec3f tan(Vec3f inputRGB) {
+		return tan(inputRGB, null);
+	}
+	
+	default Vec3f tan(Vec3f inputRGB, Vec3f outputRGB) {
+		if(outputRGB == null) {
+			outputRGB = new Vec3f();
+		}
+		
+		outputRGB.setX(Math.tan(inputRGB.getX()));
+		outputRGB.setY(Math.tan(inputRGB.getY()));
+		outputRGB.setZ(Math.tan(inputRGB.getZ()));
+		
+
+		return outputRGB;
+	}
+	
+	default void tanLocal(Vec3f inputRGB) {
+		inputRGB.setX(Math.tan(inputRGB.getX()));
+		inputRGB.setY(Math.tan(inputRGB.getY()));
+		inputRGB.setZ(Math.tan(inputRGB.getZ()));
+	}
 }

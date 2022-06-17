@@ -81,6 +81,10 @@ public interface Insight {
 	 */
 	public JFrame getWindow();
 	
+	public void render();
+	
+	public boolean isRunning();
+	
 	/**
 	 * Adds a Mesh to the Internal RenderHandler 
 	 * @param mesh
@@ -142,17 +146,19 @@ public interface Insight {
 	 * @param cameraIndex
 	 */
 	public void setActiveCamera(int cameraIndex);
+
+	public void addShader(IShader shader);
 	
-	/**
-	 * 
-	 * @param handler
-	 */
-	public void setRenderHandler(IRenderHandler handler);
+	public IShader getShader(int shaderIndex);
+
+	public int getShaderAmount();
 	
-	/**
-	 * 
-	 * @param handlerIndex
-	 * @return
-	 */
-	public IRenderHandler getRenderHandler();
+	public default IShader[] getAllShader() {
+		int shaderAmount = getShaderAmount();
+		IShader[] shader = new IShader[shaderAmount];
+		for(int i=0;i!= shaderAmount;i++) {
+			shader[i] = getShader(i);
+		}
+		return shader;
+	}
 }
