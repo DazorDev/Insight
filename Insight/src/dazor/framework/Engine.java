@@ -3,7 +3,6 @@ package dazor.framework;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
-import javax.management.RuntimeErrorException;
 import javax.swing.JFrame;
 
 import dazor.api.IShader;

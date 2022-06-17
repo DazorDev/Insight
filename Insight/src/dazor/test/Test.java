@@ -30,7 +30,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import dazor.framework.loading.ObjLoader;
-import dazor.framework.math.ImageRotation;
 import dazor.framework.math.Quaternion;
 import dazor.framework.math.Vec3f;
 import dazor.framework.models.Face;
