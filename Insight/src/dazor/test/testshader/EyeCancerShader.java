@@ -1,4 +1,4 @@
-package dazor.test;
+package dazor.test.testshader;
 
 import dazor.api.IShader;
 import dazor.framework.buffer.ColorBuffer;
@@ -28,8 +28,6 @@ public class EyeCancerShader implements IShader {
 
 	@Override
 	public Vec3f processPixel(Vec2f fragCoord, ColorBuffer c, float t) {
-//		Vec2f uv = fragCoord.scale(1f/c.width, 1f/c.height);
-//		Vec2f uv = fragCoord.subtract(new Vec2f(c.width*.5f,c.height*.5f)).scale(1f/c.height);
 		Vec2f uv = fragCoord.scale(1f/c.width, 1f/c.height);
 		uv.subtractLocal(new Vec2f(0.5f,0.5f));
 		uv.scaleLocal(120f);

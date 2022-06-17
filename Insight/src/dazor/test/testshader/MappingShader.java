@@ -1,4 +1,4 @@
-package dazor.test;
+package dazor.test.testshader;
 
 import java.awt.image.BufferedImage;
 

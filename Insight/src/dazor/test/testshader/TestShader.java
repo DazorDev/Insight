@@ -1,4 +1,4 @@
-package dazor.test;
+package dazor.test.testshader;
 
 import dazor.api.IShader;
 import dazor.framework.buffer.ColorBuffer;
@@ -6,7 +6,7 @@ import dazor.framework.math.Vec2f;
 import dazor.framework.math.Vec3f;
 import dazor.framework.math.Vertex;
 
-public class ye implements IShader {
+public class TestShader implements IShader {
 
 	@Override
 	public void preDraw() {
@@ -27,18 +27,17 @@ public class ye implements IShader {
 	}
 
 	@Override
-	public Vec3f processPixel(Vec2f fragCoord, ColorBuffer c, float t) {
-		// TODO Auto-generated method stub
-		Vec3f output = new Vec3f(Math.cos(fragCoord.getX()+t),Math.cos(fragCoord.getY()+t),Math.cos(fragCoord.getX()+t));
-		
-		
-		return output;
-	}
-
-	@Override
 	public void processGemotry() {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
+	public Vec3f processPixel(Vec2f fragCoord, ColorBuffer c, float t) {
+		Vec2f uv = fragCoord.scale(1f/c.width, 1f/c.height);
+		Vec3f output = new Vec3f(uv.getX(),uv.getY(),uv.getX());
+		output = addColor(multiplyColor(cos(addColor(output, t).add(0,2,4)),.5f),.5f);
+		return output;
+	}
+	
 }
