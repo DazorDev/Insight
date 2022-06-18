@@ -1,5 +1,6 @@
 package dazor.framework.buffer;
 
+import dazor.framework.math.Vec2f;
 import dazor.framework.math.Vec3f;
 
 /**
@@ -11,6 +12,24 @@ import dazor.framework.math.Vec3f;
  */
 public class ColorBuffer {
 
+	/**
+	 * The conversion between the internally used 0f - 1f and 255 base color base the java framework uses
+	 * It is used to convert the values between one and another and is here to provied clarity
+	 */
+	private static final int RGB_CON = 255;
+	
+	/**
+	 * The amount of bits a number will be shifted to the side
+	 * This is used in the conversion from 3 values r g b to one single integer which will represent the color in its entirety
+	 */
+	private static final int SINGLE_BIT_SHIFT = 8;
+	
+	/**
+	 * Is the double of {@link #singleBitShift} and basically serves the purpose to shift it to the left 2 times
+	 */
+	private static final int DOUBLE_BIT_SHIFT = SINGLE_BIT_SHIFT * 2;
+	
+	
 	/**
 	 * The width of the ColorBuffer
 	 * This Value will be used to inizialze the size of the data array and to calculate the Position of a given Pixel inside {@link #data} 
@@ -31,14 +50,16 @@ public class ColorBuffer {
 	float[] data;
 	
 	/**
-	 * 
+	 * Basics constructor which calls {@link #ColorBuffer(int, int)} with default parameters
 	 */
 	public ColorBuffer() {
 		initValues(0,0);
 	}
 	
 	/**
-	 * 
+	 * Creates an array with the given inputs as the hyothetical width and length of the array
+	 * It will use these values to calculate how big the buffer should be so that we can store all the values we need
+	 * It uses a 1 dimensional array to try to squeeze more efficiency out of the already slow java framework
 	 * @param width
 	 * @param height
 	 */
@@ -77,9 +98,9 @@ public class ColorBuffer {
 		int dataPos = getDataPos(x, y);
 		
 		//Sets the individual rgb values to the corresponding place inside the array
-		data[dataPos]   = r*255f;
-		data[dataPos+1] = g*255f;
-		data[dataPos+2] = b*255f;
+		data[dataPos]   = r;
+		data[dataPos+1] = g;
+		data[dataPos+2] = b;
 	}
 	
 	/**
@@ -131,7 +152,7 @@ public class ColorBuffer {
 		int currentDataPosition = getDataPos(x,y);
 		
 		//For each possible space in the array loop over the data array
-		for(int i=0; i!=2; i++) {
+		for(int i=0; i!=3; i++) {
 			//Then lastly add the i value to lop over all the rgb values and set these in the col array
 			col[i] = data[currentDataPosition+i];
 		}
@@ -150,45 +171,101 @@ public class ColorBuffer {
 		return new Vec3f(getColor(x,y));
 	}
 	
+	/**
+	 * Small convenience function which allows a vector to be used instead of two int´s as position
+	 * @param fragCoord the screen pos
+	 * @return a Vec3f which contains the rgb values of the pixel
+	 */
+	public Vec3f getColorVector(Vec2f fragCoord) {
+		return getColorVector((int)fragCoord.getX(),(int)fragCoord.getY());
+	}
+	
+	/**
+	 * Returns the entire colorBuffer array without any conversion taking place
+	 * @return {@link #data}
+	 */
 	public float[] getAll() {
 		return data;
 	}
 	
+	/**
+	 * Returns the entire colorBuffer array with conversion to the java intrgb system
+	 * @return {@link #data} converted to an array of int rgb´s for each pixel
+	 */
 	public int[] getAllIntRGB() {
+		//creates an array of integers which will store the int rgb´s
 		int[] colArray = new int[width*height];
+		//The current positions inside the color array
 		int colPos = 0;
+
+		//Loops over every single pixel
 		for(int i=0; i!= height; i++) {
 			for(int j=0; j!=width; j++) {
+				
+				//fetches the intrgb of the current pixel position and add it to the Array
 				colArray[colPos] = getIntRGB(i,j);
+				//Increase the current position inside the intrgb color array
 				colPos++;
 			}
-		}
+		}		
+		//return the color array
 		return colArray;
 	}
 	
+	/**
+	 * Returns the int RGB and an given x and y coordiante on the screen
+	 * @param x position on the screen
+	 * @param y position on the screen
+	 * @return the Color in the IntRGB format
+	 */
 	public int getIntRGB(int x, int y) {
+		//fetches the position inside the array
 		int pos = getDataPos(x, y);
+		//return the color from the position
 		return getIntFromDataPos(pos);
 	}
 	
-	private int getIntFromDataPos(int pos) {
-		return getIntFromColor((int)data[pos],(int)data[pos+1],(int)data[pos+2]);
+	/**
+	 * Returns an color from a given position inside the array
+	 * @param arrayPosition
+	 * @return
+	 */
+	private int getIntFromDataPos(int arrayPosition) {
+		//Uses the position to get the rest of the rgb coordiantes simply adding 1 
+		return getIntFromColor(data[arrayPosition],data[arrayPosition+1],data[arrayPosition+2]);
 	}
 	
-	public int getIntFromColor(int red, int green, int blue){
-		int rgb = red;
-		rgb = (rgb << 8) + green;
-		rgb = (rgb << 8) + blue;
+	/**
+	 * Determins the IntRGB value from 3 sperate red, green and blue values
+	 * @param red position of the red color value
+	 * @param green position of the green color value
+	 * @param blue position the blue color value
+	 * @return the color in an Intrgb format 
+	 */
+	public int getIntFromColor(float red, float green, float blue){
+		//Set the Rgb equal to red
+		int rgb = (int) (red * RGB_CON);
+		//Push the current rgb 8 bits to the left and then add the green value to the beginning of the number
+		//This basically puts the blue value to the end of the number
+		rgb = (rgb << SINGLE_BIT_SHIFT) + (int) (green * RGB_CON);
+		//Push the current rgb bits another 8 bits to the left and add the blue value to the number 
+		rgb = (rgb << SINGLE_BIT_SHIFT) + (int) (blue * RGB_CON);
+		//Return the rgb
 		return rgb;
 	}
 	
+	/**
+	 * Determins the r g b values from an integer 
+	 * @param rgbInt a color in the IntRGB format containing the 3 color values
+	 * @return an array of 3 floats between 0f - 1f which hold the color
+	 */
 	public float[] getColorFromInt(int rgbInt) {
-		float red = (rgbInt >> 16) & 0xFF;
-		float green = (rgbInt >> 8) & 0xFF;
+		float red = (rgbInt >> DOUBLE_BIT_SHIFT) & 0xFF;
+		float green = (rgbInt >> SINGLE_BIT_SHIFT) & 0xFF;
 		float blue = rgbInt & 0xFF;
-		red /= 255f;
-		green /= 255f;
-		blue /= 255f;
+		red /= RGB_CON;
+		green /= RGB_CON;
+		blue /= RGB_CON;
 		return new float[] {red,green,blue};
 	}
 	

@@ -12,6 +12,10 @@ import dazor.framework.models.Camera;
 import dazor.framework.models.Mesh;
 import dazor.framework.util.TimeHandler;
 
+/**
+ * Renderer Class which will handle the use of Shaders and meshes
+ * @author Daniel Banic
+ */
 public class Renderer {
 
 	ArrayList<Mesh> meshes = new ArrayList<>();
@@ -108,6 +112,10 @@ public class Renderer {
 		this.shader.add(shader);
 	}
 
+	/**
+	 * Loops over every single position which will be affected by the fragment / pixel shader 
+	 * for the moment it is every single position on the screen
+	 */
 	private void loopOverWindow() {
 		for(int yCoordinate = 0; yCoordinate != height; yCoordinate++) {
 			for(int xCoordinate = 0; xCoordinate != width; xCoordinate++) {
