@@ -1,8 +1,7 @@
 package dazor.test;
 
 import dazor.api.Insight;
-import dazor.test.testshader.EyeCancerShader;
-import dazor.test.testshader.TestShader;
+import dazor.test.testshader.MappingShader;
 
 public class InsightTest {
 
@@ -11,8 +10,7 @@ public class InsightTest {
 		Insight i = Insight.create();
 		
 		i.createWindow(200,200);
-		i.addShader(new EyeCancerShader());
-		i.addShader(new TestShader());
+		i.addShader(new MappingShader());
 		i.render();
 	}
 }

@@ -36,7 +36,7 @@ import dazor.framework.models.Face;
 import dazor.framework.models.Mesh;
 
 public class Test {
-
+	
 	static float globalScale = 1;
 	static BufferedImage image;
 	static BufferedImage newImage;
@@ -104,7 +104,6 @@ public class Test {
 			
 		};
 		chooser.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(chooser.getSelectedFile().toString());

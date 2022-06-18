@@ -10,8 +10,8 @@ import dazor.framework.math.Vec3f;
 import dazor.framework.math.Vertex;
 
 public class MappingShader implements IShader {
-
-	BufferedImage image = Loader.loadImage("C:\\Users\\danie\\OneDrive\\Documents\\Insight\\res\\MissingTextureMeme.jpg");
+	
+	BufferedImage image = Loader.loadImage("./res/MissingTextureMeme.jpg");
 	
 	@Override
 	public void preDraw() {
