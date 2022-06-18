@@ -2,7 +2,6 @@ package dazor.test;
 
 import dazor.api.Insight;
 import dazor.test.testshader.TestShader;
-import dazor.test.testshader.UsingBufferShader;
 
 public class InsightTest {
 
@@ -12,7 +11,6 @@ public class InsightTest {
 		
 		i.createWindow(200,200);
 		i.addShader(new TestShader());
-		i.addShader(new UsingBufferShader());
 		i.render();
 	}
 }
