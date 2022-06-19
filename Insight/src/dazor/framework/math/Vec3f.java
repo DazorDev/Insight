@@ -67,6 +67,10 @@ public class Vec3f {
 		this((float) x,(float) y,(float) z);
 	}
 
+	public Vec3f(float f) {
+		this(f,f,f);
+	}
+
 	/**
 	 * Sets all the Positions of the Vector
 	 * @param x the new position of the x vector

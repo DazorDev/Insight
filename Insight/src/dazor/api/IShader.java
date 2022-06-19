@@ -1,6 +1,7 @@
 package dazor.api;
 
 import dazor.framework.buffer.ColorBuffer;
+import dazor.framework.math.Mat2f;
 import dazor.framework.math.Vec2f;
 import dazor.framework.math.Vec3f;
 import dazor.framework.math.Vertex;
@@ -58,62 +59,78 @@ public interface IShader {
 	
 	/**
 	 * 
-	 * @param inputRGB
-	 * @param value
+	 * @param firstVec
+	 * @param i
 	 * @return
 	 */
-	default Vec3f addColor(Vec3f inputRGB, float value) {
-		return addColor(inputRGB, value, null);
+	default Vec2f add(Vec2f firstVec, float i) {
+		return firstVec.add(new Vec2f(i,i));
 	}
+	
+	
 	
 	/**
 	 * 
-	 * @param inputRGB
+	 * @param inputVec
 	 * @param value
-	 * @param outputRGB
+	 * @param outputVec
 	 * @return
 	 */
-	default Vec3f addColor(Vec3f inputRGB, float value, Vec3f outputRGB) {
-		if(inputRGB == null) {
-			inputRGB = new Vec3f();
+	default Vec3f add(Vec3f inputVec, float value, Vec3f outputVec) {
+		if(inputVec == null) {
+			inputVec = new Vec3f();
 		}
-		if(outputRGB == null) {
-			outputRGB = new Vec3f(value,value,value);
+		if(outputVec == null) {
+			outputVec = new Vec3f(value,value,value);
 		}	  
-		addColorLocal(outputRGB, inputRGB);  
-		return outputRGB;
+		addLocal(outputVec, inputVec);  
+		return outputVec;
 	}
 	
 	/**
 	 * 
-	 * @param firstRGB
-	 * @param secondRGB
+	 * @param firstVec
+	 * @param secondVec
 	 * @return
 	 */
-	default Vec3f addColor(Vec3f firstRGB, Vec3f secondRGB) {
-		return addColor(firstRGB, secondRGB, null);
+	default Vec3f add(Vec3f firstVec, Vec3f secondVec) {
+		return add(firstVec, secondVec, null);
 	}
 	
 	/**
 	 * 
-	 * @param firstRGB
-	 * @param secondRGB
-	 * @param outputRGB
+	 * @param firstVec
+	 * @param secondVec
 	 * @return
 	 */
-	default Vec3f addColor(Vec3f firstRGB, Vec3f secondRGB, Vec3f outputRGB) {
-		if(firstRGB == null) {
-			firstRGB = new Vec3f();
+	default Vec3f add(Vec3f inputVec, float value) {
+		return inputVec.add(value,value,value);
+	}
+	
+	/**
+	 * 
+	 * @param firstVec
+	 * @param secondVec
+	 * @param outputVec
+	 * @return
+	 */
+	default Vec3f add(Vec3f firstVec, Vec3f secondVec, Vec3f outputVec) {
+		if(firstVec == null) {
+			firstVec = new Vec3f();
 		}
 		  
-		if(secondRGB == null) {
-			secondRGB = new Vec3f();
+		if(secondVec == null) {
+			secondVec = new Vec3f();
 		}
-		if(outputRGB == null) {
-			outputRGB = new Vec3f(firstRGB);
+		if(outputVec == null) {
+			outputVec = new Vec3f(firstVec);
 		}
-		addColorLocal(outputRGB, secondRGB); 
-		return outputRGB;
+		addLocal(outputVec, secondVec); 
+		return outputVec;
+	}
+	
+	default Vec2f add(Vec2f multiply, Vec2f random2) {
+		return multiply.add(random2);
 	}
 	
 	/**
@@ -121,66 +138,70 @@ public interface IShader {
 	 * @param inputVector
 	 * @param secondVector
 	 */
-	default void addColorLocal(Vec3f inputVector, Vec3f secondVector) {
+	default void addLocal(Vec3f inputVector, Vec3f secondVector) {
 		inputVector.addLocal(secondVector);
 	}
 	
 	/**
 	 * 
-	 * @param inputRGB
+	 * @param inputVec
 	 * @param value
 	 * @return
 	 */
-	default Vec3f subtractColor(Vec3f inputRGB, float value) {
-		return subtractColor(inputRGB, value, null);
+	default Vec3f subtract(Vec3f inputVec, float value) {
+		return subtract(inputVec, value, null);
 	}
 	
 	/**
 	 * 
-	 * @param inputRGB
+	 * @param inputVec
 	 * @param value
-	 * @param outputRGB
+	 * @param outputVec
 	 * @return
 	 */
-	default Vec3f subtractColor(Vec3f inputRGB, float value, Vec3f outputRGB) {
-		if(inputRGB == null) {
-			inputRGB = new Vec3f();
+	default Vec3f subtract(Vec3f inputVec, float value, Vec3f outputVec) {
+		if(inputVec == null) {
+			inputVec = new Vec3f();
 		}
-		if(outputRGB == null) {
-			outputRGB = new Vec3f(value,value,value);
+		if(outputVec == null) {
+			outputVec = new Vec3f(value,value,value);
 		}	  
-		subtractColorLocal(outputRGB, inputRGB);    
-		return outputRGB;
+		subtractLocal(outputVec, inputVec);    
+		return outputVec;
 	}
 	
 	/**
 	 * 
-	 * @param firstRGB
-	 * @param secondRGB
+	 * @param firstVec
+	 * @param secondVec
 	 * @return
 	 */
-	default Vec3f subtractColor(Vec3f firstRGB, Vec3f secondRGB) {
-		return subtractColor(firstRGB, secondRGB, null);
+	default Vec3f subtract(Vec3f firstVec, Vec3f secondVec) {
+		return subtract(firstVec, secondVec, null);
+	}
+	
+	default Vec2f subtract(Vec2f firstVec, Vec2f secondVec) {
+		return firstVec.subtract(secondVec);
 	}
 	
 	/**
 	 * 
-	 * @param firstRGB
-	 * @param secondRGB
-	 * @param outputRGB
+	 * @param firstVec
+	 * @param secondVec
+	 * @param outputVec
 	 * @return
 	 */
-	default Vec3f subtractColor(Vec3f firstRGB, Vec3f secondRGB, Vec3f outputRGB) {
-		if(firstRGB == null) {
-			firstRGB = new Vec3f();
+	default Vec3f subtract(Vec3f firstVec, Vec3f secondVec, Vec3f outputVec) {
+		if(firstVec == null) {
+			firstVec = new Vec3f();
 		}
 		  
-		if(secondRGB == null) {
-			secondRGB = new Vec3f();
+		if(secondVec == null) {
+			secondVec = new Vec3f();
 		}
 
-		outputRGB = firstRGB.subtract(secondRGB);
-		return outputRGB;
+		outputVec = firstVec.subtract(secondVec);
+		return outputVec;
 	}
 	
 	/**
@@ -188,114 +209,190 @@ public interface IShader {
 	 * @param inputVector
 	 * @param secondVector
 	 */
-	default void subtractColorLocal(Vec3f inputVector, Vec3f secondVector) {
+	default void subtractLocal(Vec3f inputVector, Vec3f secondVector) {
 		inputVector.subtractLocal(secondVector);
 	}
 	
-	default Vec3f multiplyColor(Vec3f firstRGB, Vec3f secondRGB) {
-		return multiplyColor(firstRGB, secondRGB, null);
+	default Vec2f multiply(Mat2f inputMat, Vec2f inputVec) {
+		return multiply(inputMat, inputVec, null);
 	}
 	
-	default Vec3f multiplyColor(Vec3f firstRGB, Vec3f secondRGB, Vec3f outputRGB) {
-		if(firstRGB == null) {
-			firstRGB = new Vec3f();
+	default Vec2f multiply(Mat2f inputMat, Vec2f inputVec, Vec2f outputVec) {
+		if(inputMat == null) {
+			inputMat = new Mat2f();
 		}
 		
-		if(secondRGB == null) {
-			secondRGB = new Vec3f();
+		if(inputVec == null) {
+			inputVec = new Vec2f();
 		}
 	
-		outputRGB = firstRGB.crossProduct(secondRGB);
-		return outputRGB;
+		outputVec = inputMat.multiply(inputVec);
+		return outputVec;
 	}
 	
-	default Vec3f multiplyColor(Vec3f inputRGB, float value) {
-		return multiplyColor(inputRGB, value, null);
+	default Vec3f multiply(Vec3f firstVec, Vec3f secondVec) {
+		return multiply(firstVec, secondVec, null);
 	}
 	
-	default Vec3f multiplyColor(Vec3f inputRGB, float value, Vec3f outputRGB) {
-		if(inputRGB == null) {
-			inputRGB = new Vec3f();
-		}
-		
-		if(outputRGB == null) {
-			outputRGB = new Vec3f(inputRGB);
+	default Vec3f multiply(Vec3f firstVec, Vec3f secondVec, Vec3f outputVec) {
+		if(firstVec == null) {
+			firstVec = new Vec3f();
 		}
 		
-		multiplyColorLocal(outputRGB, value);
-		return outputRGB;
+		if(secondVec == null) {
+			secondVec = new Vec3f();
+		}
+	
+		outputVec = firstVec.crossProduct(secondVec);
+		return outputVec;
 	}
 	
-	default void multiplyColorLocal(Vec3f inputRGB, float value) {
-		inputRGB.scaleLocal(value);
+	default Vec3f multiply(Vec3f inputVec, float value) {
+		return multiply(inputVec, value, null);
+	}
+	
+	default Vec3f multiply(Vec3f inputVec, float value, Vec3f outputVec) {
+		if(inputVec == null) {
+			inputVec = new Vec3f();
+		}
+		
+		if(outputVec == null) {
+			outputVec = new Vec3f(inputVec);
+		}
+		
+		multiplyLocal(outputVec, value);
+		return outputVec;
+	}
+	
+	default void multiplyLocal(Vec3f inputVec, float value) {
+		inputVec.scaleLocal(value);
 	}
 
-	default Vec3f cos(Vec3f inputRGB) {
-		return cos(inputRGB, null);
+	default Vec2f multiply(Vec2f fragCoord, float i) {
+		// TODO Auto-generated method stub
+		
+		return fragCoord.scale(i);
 	}
 	
-	default Vec3f cos(Vec3f inputRGB, Vec3f outputRGB) {
-		if(outputRGB == null) {
-			outputRGB = new Vec3f();
+	default float cos(float input) {
+		return (float) Math.cos(input);
+	}
+	
+	default Vec3f cos(Vec3f inputVec) {
+		return cos(inputVec, null);
+	}
+	
+	default Vec3f cos(Vec3f inputVec, Vec3f outputVec) {
+		if(outputVec == null) {
+			outputVec = new Vec3f();
 		}
 		
-		outputRGB.setX(Math.cos(inputRGB.getX()));
-		outputRGB.setY(Math.cos(inputRGB.getY()));
-		outputRGB.setZ(Math.cos(inputRGB.getZ()));
+		outputVec.setX(Math.cos(inputVec.getX()));
+		outputVec.setY(Math.cos(inputVec.getY()));
+		outputVec.setZ(Math.cos(inputVec.getZ()));
 		
 
-		return outputRGB;
+		return outputVec;
 	}
 	
-	default void cosLocal(Vec3f inputRGB) {
-		inputRGB.setX(Math.cos(inputRGB.getX()));
-		inputRGB.setY(Math.cos(inputRGB.getY()));
-		inputRGB.setZ(Math.cos(inputRGB.getZ()));
+	default void cosLocal(Vec3f inputVec) {
+		inputVec.setX(Math.cos(inputVec.getX()));
+		inputVec.setY(Math.cos(inputVec.getY()));
+		inputVec.setZ(Math.cos(inputVec.getZ()));
 	}
 	
-	default Vec3f sin(Vec3f inputRGB) {
-		return sin(inputRGB, null);
+	default float sin(float input) {
+		return (float) Math.sin(input);
 	}
 	
-	default Vec3f sin(Vec3f inputRGB, Vec3f outputRGB) {
-		if(outputRGB == null) {
-			outputRGB = new Vec3f();
+	default Vec3f sin(Vec3f inputVec) {
+		return sin(inputVec, null);
+	}
+	
+	default Vec3f sin(Vec3f inputVec, Vec3f outputVec) {
+		if(outputVec == null) {
+			outputVec = new Vec3f();
 		}
 		
-		outputRGB.setX(Math.sin(inputRGB.getX()));
-		outputRGB.setY(Math.sin(inputRGB.getY()));
-		outputRGB.setZ(Math.sin(inputRGB.getZ()));
+		outputVec.setX(Math.sin(inputVec.getX()));
+		outputVec.setY(Math.sin(inputVec.getY()));
+		outputVec.setZ(Math.sin(inputVec.getZ()));
 		
 
-		return outputRGB;
+		return outputVec;
 	}
 	
-	default void sinLocal(Vec3f inputRGB) {
-		inputRGB.setX(Math.sin(inputRGB.getX()));
-		inputRGB.setY(Math.sin(inputRGB.getY()));
-		inputRGB.setZ(Math.sin(inputRGB.getZ()));
+	default void sinLocal(Vec3f inputVec) {
+		inputVec.setX(Math.sin(inputVec.getX()));
+		inputVec.setY(Math.sin(inputVec.getY()));
+		inputVec.setZ(Math.sin(inputVec.getZ()));
 	}
 	
-	default Vec3f tan(Vec3f inputRGB) {
-		return tan(inputRGB, null);
+	default float tan(float input) {
+		return (float) Math.tan(input);
 	}
 	
-	default Vec3f tan(Vec3f inputRGB, Vec3f outputRGB) {
-		if(outputRGB == null) {
-			outputRGB = new Vec3f();
+	default Vec3f tan(Vec3f inputVec) {
+		return tan(inputVec, null);
+	}
+	
+	default Vec3f tan(Vec3f inputVec, Vec3f outputVec) {
+		if(outputVec == null) {
+			outputVec = new Vec3f();
 		}
 		
-		outputRGB.setX(Math.tan(inputRGB.getX()));
-		outputRGB.setY(Math.tan(inputRGB.getY()));
-		outputRGB.setZ(Math.tan(inputRGB.getZ()));
+		outputVec.setX(Math.tan(inputVec.getX()));
+		outputVec.setY(Math.tan(inputVec.getY()));
+		outputVec.setZ(Math.tan(inputVec.getZ()));
 		
 
-		return outputRGB;
+		return outputVec;
 	}
 	
-	default void tanLocal(Vec3f inputRGB) {
-		inputRGB.setX(Math.tan(inputRGB.getX()));
-		inputRGB.setY(Math.tan(inputRGB.getY()));
-		inputRGB.setZ(Math.tan(inputRGB.getZ()));
+	default void tanLocal(Vec3f inputVec) {
+		inputVec.setX(Math.tan(inputVec.getX()));
+		inputVec.setY(Math.tan(inputVec.getY()));
+		inputVec.setZ(Math.tan(inputVec.getZ()));
 	}
+	
+	default float dot(Vec3f firstInputVec, Vec3f secondInputVec) {
+		return firstInputVec.dotProduct(secondInputVec);
+	}	
+	
+	default Vec3f cross(Vec3f firstInputVec, Vec3f secondInputVec) {
+		return firstInputVec.crossProduct(secondInputVec);
+	}	
+	
+	default float dot(Vec2f firstInputVec, Vec2f secondInputVec) {
+		return firstInputVec.dotProduct(secondInputVec);
+	}	
+	
+	default float dot(Mat2f firstInputMat, Mat2f secondInputMat) {
+		return firstInputMat.dotProduct(secondInputMat);
+	}	
+	
+	default float fract(float d) {
+		return d - floor(d);
+	}
+	
+	default float floor(float input) {
+		return (float) Math.floor(input);
+	}
+	
+	default float abs(float input) {
+		return (float) Math.abs(input);
+	}
+	
+	default float ceil(float input) {
+		return (float) Math.ceil(input);
+	}
+	
+	default float round(float input) {
+		return (float) Math.round(input);
+	}
+	
+	default float log(float input) {
+		return (float) Math.log(input);
+	}
+	
 }

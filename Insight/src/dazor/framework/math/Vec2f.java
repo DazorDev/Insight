@@ -5,6 +5,8 @@ public class Vec2f {
 	float x;
 	float y;
 	
+	float[] vec = {x,y};
+ 	
 	public Vec2f() {
 		this(0,0);
 	}
@@ -109,6 +111,20 @@ public class Vec2f {
 	public void normalizeLocal() {
 		scaleLocal(1/getLength());
 	}
+
+	
+	/**
+	 * Creates the Crossproduct between this Vector and another Vector
+	 * @param inputVector
+	 * @return the dot product of the two vectors
+	 */
+	public float dotProduct(Vec2f inputVector) {
+		float dot = 0;		
+		dot += this.x * inputVector.getX();
+		dot += this.y * inputVector.getY();
+		return dot;
+	}
+	
 	
 	public float getX() {
 		return x;
@@ -124,6 +140,10 @@ public class Vec2f {
 
 	public void setY(float y) {
 		this.y = y;
+	}
+	
+	public float[] getVector() {
+		return this.vec;
 	}
 	
 	/**

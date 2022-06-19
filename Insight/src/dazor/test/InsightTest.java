@@ -1,7 +1,6 @@
 package dazor.test;
 
 import dazor.api.Insight;
-import dazor.test.testshader.TestShader;
 
 public class InsightTest {
 
@@ -9,8 +8,7 @@ public class InsightTest {
 		
 		Insight i = Insight.create();
 		
-		i.createWindow(200,200);
-		i.addShader(new TestShader());
+		i.createWindow(500,500);
 		i.render();
 	}
 }
