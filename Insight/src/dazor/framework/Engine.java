@@ -11,6 +11,7 @@ import dazor.framework.models.Camera;
 import dazor.framework.models.Mesh;
 import dazor.framework.rendering.Renderer;
 import dazor.framework.util.JFrameHelper;
+import dazor.framework.util.TimeHandler;
 
 public class Engine implements Insight {
 
@@ -164,16 +165,29 @@ public class Engine implements Insight {
 			
 			@Override
 			public void run() {
-				while(true) {
-					renderHandler.render(frame.getGraphics());
-				}
+				benchMarkRun();
 			}
 		};
 		
 		Thread t = new Thread(runnable);
 		t.start();
 	}
+	
+	int sum = 0;
+	private void benchMarkRun() {
+		TimeHandler th = new TimeHandler();
+		int tempCount = 0;
+		while(true) {
+			th.calculateCallsPerSecond();
+			if(th.getCallsPerSecond() != tempCount) {
+				tempCount = th.getCallsPerSecond();
+				frame.setTitle("Current FPS : "+tempCount);
+			}
+			renderHandler.render(frame.getGraphics());
+		}
 
+	}
+	
 	@Override
 	public boolean isRunning() {
 		return isRunning;

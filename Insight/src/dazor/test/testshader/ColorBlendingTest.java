@@ -38,7 +38,7 @@ public class ColorBlendingTest implements IShader {
 		Vec3f output = new Vec3f(uv.getX(),uv.getY(),uv.getX());
 		output = add(multiply(cos(add(output, t).add(0,2,4)),.5f),.5f);
 		Vec3f tempCol = c.getColorVector(fragCoord);
-		if(tempCol.getX() < 0.5f) {
+		if(tempCol.getX() < 0.5f && tempCol.getY() < 0.5f && tempCol.getZ() < 0.5f) {
 			output.setX(0); 
 			output.setY(0);
 			output.setZ(0);

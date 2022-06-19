@@ -157,6 +157,8 @@ public class TimeHandler {
 			lastCallsPerSecond = callsPerSecond;
 			//then set calls per second equal to 0
 			callsPerSecond = 0;
+			//
+			lastCallsPerSecondTime = getCurrentTime();
 		}
 		//Increase the calls per second by 1
 		callsPerSecond++;
