@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import dazor.api.IListener;
 import dazor.api.IShader;
 import dazor.api.Insight;
 import dazor.framework.models.Camera;
@@ -65,6 +66,10 @@ public class Engine implements Insight {
 		
 	}
 	
+	@Override
+	public void setWindowSize(Dimension dimension) {
+		renderHandler.setDimensions(dimension);
+	}
 	
 	
 	@Override
@@ -160,20 +165,19 @@ public class Engine implements Insight {
 	
 	@Override
 	public void render() {
-		
+				
 		Runnable runnable = new Runnable() {
-			
+
 			@Override
 			public void run() {
 				benchMarkRun();
 			}
 		};
-		
+				
 		Thread t = new Thread(runnable);
 		t.start();
 	}
 	
-	int sum = 0;
 	private void benchMarkRun() {
 		TimeHandler th = new TimeHandler();
 		int tempCount = 0;
@@ -185,11 +189,26 @@ public class Engine implements Insight {
 			}
 			renderHandler.render(frame.getGraphics());
 		}
-
 	}
-	
+
 	@Override
 	public boolean isRunning() {
 		return isRunning;
+	}
+
+	@Override
+	public void registerListener(IListener listener) {
+		// TODO Auto-generated method stub
+		frame.addKeyListener(listener);
+		frame.addMouseListener(listener);
+		frame.addComponentListener(listener);
+	}
+
+	@Override
+	public void removeListener(IListener listener) {
+		// TODO Auto-generated method stub
+		frame.removeKeyListener(listener);
+		frame.removeMouseListener(listener);
+		frame.removeComponentListener(listener);
 	}
 }

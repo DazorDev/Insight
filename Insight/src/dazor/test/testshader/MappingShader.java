@@ -35,7 +35,7 @@ public class MappingShader implements IShader {
 	public Vec3f processPixel(Vec2f fragCoord, ColorBuffer c, float t) {
 		Vec2f uv = fragCoord.scale(1f/c.width, 1f/c.height);
 		uv.scaleLocal(image.getWidth(),image.getHeight());
-		int intRGB = image.getRGB((int) uv.getX()%image.getWidth(), (int)uv.getY()%image.getHeight());
+		int intRGB = image.getRGB((int) uv.getX()%image.getWidth(), (int) uv.getY()%image.getHeight());
 		Vec3f output = new Vec3f(c.getColorFromInt(intRGB));
 		return output;
 	}

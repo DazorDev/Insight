@@ -75,6 +75,8 @@ public interface Insight {
 	 */
 	public void setWindowState(boolean state);
 	
+	public void setWindowSize(Dimension dimension);
+	
 	/**
 	 * 
 	 * @return
@@ -152,6 +154,10 @@ public interface Insight {
 	public IShader getShader(int shaderIndex);
 
 	public int getShaderAmount();
+	
+	public void registerListener(IListener listener);
+	
+	public void removeListener(IListener listener);
 	
 	public default IShader[] getAllShader() {
 		int shaderAmount = getShaderAmount();

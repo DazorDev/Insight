@@ -1,5 +1,6 @@
 package dazor.framework.rendering;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -35,6 +36,10 @@ public class Renderer {
 	}
 	
 	public Renderer(int width, int height) {
+		setDimensions(width, height);
+	}
+	
+	public void setDimensions(int width, int height) {
 		this.width = width;
 		this.height = height;
 		this.depthBuffer.initValues(width, height);
@@ -42,6 +47,9 @@ public class Renderer {
 		image = new BufferedImage(width,height, BufferedImage.TYPE_INT_BGR);
 	}
 	
+	public void setDimensions(Dimension dimension) {
+		setDimensions(dimension.width,dimension.height);
+	}
 	
 	public Camera getCamera() {
 		return this.camera;
@@ -94,17 +102,25 @@ public class Renderer {
 	
 	public void render(Graphics g) {
 		update();
-		usedMeshes.forEach(mesh -> {
-			mesh.getPolygons().forEach(polygon -> {
-				polygon.paintImagePolygon(g,mesh.getTexture().getImage());
-			});
-		});
+//		usedMeshes.forEach(mesh -> {
+//			mesh.getPolygons().forEach(polygon -> {
+//				polygon.paintImagePolygon(g,mesh.getTexture().getImage());
+//			});
+//		});
 		loopOverWindow();
-		for(int y = 0; y!= colorBuffer.height; y++) {
-			for(int x = 0; x!= colorBuffer.width; x++) {
-				image.setRGB(x, y, colorBuffer.getIntRGB(x, y));
-			}
-		}      		
+		copyToScreen();
+		g.drawImage(image, 0, 0, null);
+	}
+	
+	public void render(Graphics g, int beginningX, int beginningY, int endX, int endY) {
+		update();
+//		usedMeshes.forEach(mesh -> {
+//			mesh.getPolygons().forEach(polygon -> {
+//				polygon.paintImagePolygon(g,mesh.getTexture().getImage());
+//			});
+//		});
+		loopOverWindow(beginningX, beginningY, endX, endY);
+		copyToScreen(beginningX, beginningY, endX, endY);
 		g.drawImage(image, 0, 0, null);
 	}
 	
@@ -125,6 +141,39 @@ public class Renderer {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Loops over every single position which will be affected by the fragment / pixel shader 
+	 * for the moment it is every single position on the screen
+	 */
+	private void loopOverWindow(int beginningX, int beginningY, int endX, int endY) {
+		for(int yCoordinate = beginningY; yCoordinate != endY; yCoordinate++) {
+			for(int xCoordinate = beginningX; xCoordinate != endX; xCoordinate++) {
+				Vec2f tempCoord = new Vec2f(xCoordinate,yCoordinate);
+				for(IShader shader : shader) {
+					colorBuffer.setColor(xCoordinate, yCoordinate, shader.processPixel(tempCoord, colorBuffer, time));
+				}
+			}
+		}
+	}
+	
+	private void copyToScreen() {
+		for(int y = 0; y!= colorBuffer.height; y++) {
+			for(int x = 0; x!= colorBuffer.width; x++) {
+				if(x >= image.getWidth() || y >= image.getHeight()) return;
+				image.setRGB(x, y, colorBuffer.getIntRGB(x, y));
+			}
+		}    
+	}
+	
+	private void copyToScreen(int beginningX, int beginningY, int endX, int endY) {
+		for(int y = beginningY; y!= endY; y++) {
+			for(int x = beginningX; x!= endX; x++) {
+				if(x > image.getWidth() || y > image.getHeight()) return;
+				image.setRGB(x, y, colorBuffer.getIntRGB(x, y));
+			}
+		}    
 	}
 	
 	public int getShaderAmount() {

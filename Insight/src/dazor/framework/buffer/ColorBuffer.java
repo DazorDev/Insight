@@ -96,7 +96,8 @@ public class ColorBuffer {
 	public void setColor(int x, int y, float r, float g, float b) {
 		//Get the Pixel coordinate
 		int dataPos = getDataPos(x, y);
-		
+		//Checks if the coordinate is outside of colorBuffer area
+		if(dataPos >= data.length) return;
 		//Sets the individual rgb values to the corresponding place inside the array
 		data[dataPos]   = r;
 		data[dataPos+1] = g;
@@ -220,9 +221,10 @@ public class ColorBuffer {
 	 */
 	public int getIntRGB(int x, int y) {
 		//fetches the position inside the array
-		int pos = getDataPos(x, y);
+		int dataPos = getDataPos(x, y);
+		if(dataPos > data.length) return 0;
 		//return the color from the position
-		return getIntFromDataPos(pos);
+		return getIntFromDataPos(dataPos);
 	}
 	
 	/**

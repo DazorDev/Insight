@@ -6,17 +6,22 @@ import dazor.framework.math.Vec2f;
 import dazor.framework.math.Vec3f;
 import dazor.framework.math.Vertex;
 
+/**
+ * 
+ * @author Daniel Banic
+ *
+ */
 public interface IShader {
 	
 	//The first Part of this interface consist of all the functions a Shader should / could use to process data
 	
 	/**
-	 * 
+	 * Simple debug function which is called before the actual rendering
 	 */
 	public void preDraw();
 	
 	/**
-	 * 
+	 * Simple debug function which is called after the actual rendering
 	 */
 	public void postDraw();
 	
@@ -105,6 +110,21 @@ public interface IShader {
 	 */
 	default Vec3f add(Vec3f inputVec, float value) {
 		return inputVec.add(value,value,value);
+	}
+	
+	/**
+	 * 
+	 * @param firstVec
+	 * @param value
+	 * @return
+	 */
+	default void addLocal(Vec3f inputVec, float value) {
+		inputVec.addLocal(value,value,value);
+	}
+	
+
+	default void addLocal(Vec3f inputVec, float i, float j, float k) {
+		inputVec.addLocal(i, j, k);
 	}
 	
 	/**
