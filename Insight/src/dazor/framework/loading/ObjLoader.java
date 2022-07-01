@@ -3,6 +3,7 @@ package dazor.framework.loading;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 
 import dazor.framework.math.Vec2f;
 import dazor.framework.math.Vec3f;
@@ -18,11 +19,11 @@ public class ObjLoader {
 		try (BufferedReader reader = new BufferedReader(new FileReader(fileUrl))) {
 		    String line;
 		    while ((line = reader.readLine()) != null) {
-		    	System.out.println(line);
+//		    	System.out.println(line);
 		    	String[] tokens = line.split(" ");
 		    	handleToken(tokens,loadedMesh);
 		    }
-		    System.out.println(loadedMesh.getPolygons());
+//		    System.out.println(loadedMesh.getPolygons());
 		    return loadedMesh;	    
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -31,20 +32,23 @@ public class ObjLoader {
 	}
 	
 	public static Mesh load(File file) {
-		Mesh loadedMesh = new Mesh();
-		
+
+		Mesh mesh = new Mesh();
 		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-		    String line;
-		    while ((line = reader.readLine()) != null) {
-		    	String[] tokens = line.split(" ");
-		    	handleToken(tokens,loadedMesh);
-		    }
-		    System.out.println(loadedMesh.getPolygons());
-		    return loadedMesh;	    
+			readFile(reader, mesh);	
+		    return mesh;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	private static void readFile(BufferedReader reader, Mesh loadedMesh) throws IOException {
+	    String line;
+	    while ((line = reader.readLine()) != null) {
+	    	String[] tokens = line.split(" ");
+	    	handleToken(tokens,loadedMesh);
+	    }
 	}
 	
 	private static void handleToken(String[] tokens, Mesh loadedMesh) {
@@ -59,9 +63,6 @@ public class ObjLoader {
 		}
 		
 		if(tokens[0].equals("vn")) {
-			for(String t : tokens) {
-				System.out.println(t);
-			}
 			loadedMesh.addNormalPoints(new Vec3f(Float.valueOf(tokens[1]),Float.valueOf(tokens[2]),Float.valueOf(tokens[3])));
 			return;
 		}

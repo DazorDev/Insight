@@ -30,6 +30,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import dazor.framework.loading.ObjLoader;
+import dazor.framework.math.EulerAngle;
 import dazor.framework.math.Quaternion;
 import dazor.framework.math.Vec3f;
 import dazor.framework.models.Face;
@@ -41,6 +42,7 @@ public class Test {
 	static BufferedImage image;
 	static BufferedImage newImage;
 	public static void main(String[] args) {
+		EulerAngle euler = new EulerAngle(0,0,0,1);
 		Quaternion q = new Quaternion(1,0,0,0);	
 		Vec3f offset = new Vec3f(500,500,0);
 		JFrame f = new JFrame();
@@ -130,14 +132,14 @@ public class Test {
 			
 			@Override
 			public void stateChanged(ChangeEvent e) {				
-				q.setZ(zSlider.getValue());
-				zField.setText(String.valueOf(zSlider.getValue()));
-				q.setY(ySlider.getValue());
-				yField.setText(String.valueOf(ySlider.getValue()));
-				q.setX(xSlider.getValue());
-				xField.setText(String.valueOf(xSlider.getValue()));
-				q.setW(wSlider.getValue());
-				wField.setText(String.valueOf(wSlider.getValue()));
+//				q.setZ(zSlider.getValue());
+//				zField.setText(String.valueOf(zSlider.getValue()));
+//				q.setY(ySlider.getValue());
+//				yField.setText(String.valueOf(ySlider.getValue()));
+//				q.setX(xSlider.getValue());
+//				xField.setText(String.valueOf(xSlider.getValue()));
+//				q.setW(wSlider.getValue());
+//				wField.setText(String.valueOf(wSlider.getValue()));
 				view.update(q, offset);
 			}
 		};
@@ -148,11 +150,18 @@ public class Test {
 			float tempX;
 			float tempY;
 			
+			boolean m3 = false;
+			
 			@Override
 			public void mousePressed(MouseEvent e) {
 				tempX = e.getX();
 				tempY = e.getY();
 				pressed = true;
+				if(e.getButton() == MouseEvent.BUTTON3) {
+					m3 = true;
+					return;
+				}
+				m3 = false;
 			}
 			
 			public void mouseReleased(MouseEvent e) {
@@ -161,8 +170,23 @@ public class Test {
 			
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				if(!pressed) return;
-				offset.addLocal(e.getX()-tempX, e.getY()-tempY, 0);
+				if(m3 == true) {
+					if(!pressed) return;
+					offset.addLocal(e.getX()-tempX, e.getY()-tempY, 0);
+					view.update(q, offset);
+					tempX = e.getX();
+					tempY = e.getY();
+					return;
+				}
+//				System.out.println("mode "+euler.getMode());
+//				System.out.println("eulerX " +e.getX() + " temp " + tempX);
+				euler.add(0, -(e.getX()-tempX)*.001f,(e.getY()-tempY)*.001f);
+//
+//				System.out.println(euler.getMode());
+//				System.out.println("yaw " +euler.getYaw());
+//				System.out.println("pitch " +euler.getPitch());
+//				System.out.println("roll " +euler.getRoll());
+				q.set(euler.toQuaternion());
 				view.update(q, offset);
 				tempX = e.getX();
 				tempY = e.getY();
@@ -290,10 +314,10 @@ public class Test {
 				System.out.println("no image");
 				return;
 			}
-			newImage = rotateImage(newImage);
-			g.drawImage(newImage, 0, 0, null);
+//			newImage = rotateImage(newImage);
+//			g.drawImage(newImage, 0, 0, null);
 			processedPolygons.forEach( polygon -> {	
-				polygon.drawUVMap(g, newImage);
+//				polygon.drawUVMap(g, newImage);
 				polygon.paintImagePolygon(g, newImage);
 //				polygon.drawPolygon(g);
 			});

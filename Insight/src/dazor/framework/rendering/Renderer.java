@@ -44,7 +44,7 @@ public class Renderer {
 		this.height = height;
 		this.depthBuffer.initValues(width, height);
 		this.colorBuffer.initValues(width, height);
-		image = new BufferedImage(width,height, BufferedImage.TYPE_INT_BGR);
+		image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB);
 	}
 	
 	public void setDimensions(Dimension dimension) {
@@ -112,18 +112,6 @@ public class Renderer {
 		g.drawImage(image, 0, 0, null);
 	}
 	
-	public void render(Graphics g, int beginningX, int beginningY, int endX, int endY) {
-		update();
-//		usedMeshes.forEach(mesh -> {
-//			mesh.getPolygons().forEach(polygon -> {
-//				polygon.paintImagePolygon(g,mesh.getTexture().getImage());
-//			});
-//		});
-		loopOverWindow(beginningX, beginningY, endX, endY);
-		copyToScreen(beginningX, beginningY, endX, endY);
-		g.drawImage(image, 0, 0, null);
-	}
-	
 	public void addShader(IShader shader) {
 		this.shader.add(shader);
 	}
@@ -133,49 +121,33 @@ public class Renderer {
 	 * for the moment it is every single position on the screen
 	 */
 	private void loopOverWindow() {
+		//Loop over every position of the window
 		for(int yCoordinate = 0; yCoordinate != height; yCoordinate++) {
 			for(int xCoordinate = 0; xCoordinate != width; xCoordinate++) {
+				//Create a temporary Vector for the coordiante which will be used inside the shader
 				Vec2f tempCoord = new Vec2f(xCoordinate,yCoordinate);
-				for(IShader shader : shader) {
+				//Loop over every shader 
+				for(IShader shader : shader) {				
+					//Set the resulting color of the shader operations at the x and y position inside the colorBuffer
 					colorBuffer.setColor(xCoordinate, yCoordinate, shader.processPixel(tempCoord, colorBuffer, time));
 				}
 			}
 		}
 	}
 	
-	/**
-	 * Loops over every single position which will be affected by the fragment / pixel shader 
-	 * for the moment it is every single position on the screen
-	 */
-	private void loopOverWindow(int beginningX, int beginningY, int endX, int endY) {
-		for(int yCoordinate = beginningY; yCoordinate != endY; yCoordinate++) {
-			for(int xCoordinate = beginningX; xCoordinate != endX; xCoordinate++) {
-				Vec2f tempCoord = new Vec2f(xCoordinate,yCoordinate);
-				for(IShader shader : shader) {
-					colorBuffer.setColor(xCoordinate, yCoordinate, shader.processPixel(tempCoord, colorBuffer, time));
-				}
-			}
-		}
-	}
-	
+
 	private void copyToScreen() {
+		//Loop over every position of the colorBuffer
 		for(int y = 0; y!= colorBuffer.height; y++) {
 			for(int x = 0; x!= colorBuffer.width; x++) {
-				if(x >= image.getWidth() || y >= image.getHeight()) return;
+				//If it is somehow out of bounds continue with the next position
+				if(x >= image.getWidth() || y >= image.getHeight()) continue;			
+				//Set the color to the image which will be rendered to the screen
 				image.setRGB(x, y, colorBuffer.getIntRGB(x, y));
 			}
 		}    
 	}
-	
-	private void copyToScreen(int beginningX, int beginningY, int endX, int endY) {
-		for(int y = beginningY; y!= endY; y++) {
-			for(int x = beginningX; x!= endX; x++) {
-				if(x > image.getWidth() || y > image.getHeight()) return;
-				image.setRGB(x, y, colorBuffer.getIntRGB(x, y));
-			}
-		}    
-	}
-	
+
 	public int getShaderAmount() {
 		return this.shader.size();
 	}

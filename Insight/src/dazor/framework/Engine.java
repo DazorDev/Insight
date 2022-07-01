@@ -1,6 +1,7 @@
 package dazor.framework;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -21,7 +22,17 @@ public class Engine implements Insight {
 	ArrayList<Camera> cameras = new ArrayList<>();
 	Camera activeCamera;
 	
+	
+	
 	private boolean isRunning = false;
+	
+	private Runnable benchmark = new Runnable() {
+		@Override
+		public void run() {
+			benchMarkRun();
+		}
+	};
+	
 	
 	public Engine() {
 		
@@ -63,14 +74,17 @@ public class Engine implements Insight {
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(3);
 		renderHandler = new Renderer(dimension.width,dimension.height);
-		
 	}
 	
 	@Override
 	public void setWindowSize(Dimension dimension) {
 		renderHandler.setDimensions(dimension);
+	}	
+
+	@Override
+	public void setWindowSize(int width, int height) {
+		renderHandler.setDimensions(width, height);
 	}
-	
 	
 	@Override
 	public void toggleWindow() {
@@ -165,29 +179,22 @@ public class Engine implements Insight {
 	
 	@Override
 	public void render() {
-				
-		Runnable runnable = new Runnable() {
-
-			@Override
-			public void run() {
-				benchMarkRun();
-			}
-		};
-				
-		Thread t = new Thread(runnable);
+		Thread t = new Thread(benchmark);
 		t.start();
 	}
 	
 	private void benchMarkRun() {
 		TimeHandler th = new TimeHandler();
 		int tempCount = 0;
+		frame.createBufferStrategy(2);
+		Graphics g = frame.getGraphics();
 		while(true) {
 			th.calculateCallsPerSecond();
 			if(th.getCallsPerSecond() != tempCount) {
 				tempCount = th.getCallsPerSecond();
 				frame.setTitle("Current FPS : "+tempCount);
 			}
-			renderHandler.render(frame.getGraphics());
+			renderHandler.render(g);
 		}
 	}
 
@@ -198,7 +205,6 @@ public class Engine implements Insight {
 
 	@Override
 	public void registerListener(IListener listener) {
-		// TODO Auto-generated method stub
 		frame.addKeyListener(listener);
 		frame.addMouseListener(listener);
 		frame.addComponentListener(listener);
@@ -206,9 +212,9 @@ public class Engine implements Insight {
 
 	@Override
 	public void removeListener(IListener listener) {
-		// TODO Auto-generated method stub
 		frame.removeKeyListener(listener);
 		frame.removeMouseListener(listener);
 		frame.removeComponentListener(listener);
 	}
+
 }

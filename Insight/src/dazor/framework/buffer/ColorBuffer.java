@@ -16,7 +16,7 @@ public class ColorBuffer {
 	 * The conversion between the internally used 0f - 1f and 255 base color base the java framework uses
 	 * It is used to convert the values between one and another and is here to provied clarity
 	 */
-	private static final int RGB_CON = 255;
+	private static final int RGB_CONVERSION = 255;
 	
 	/**
 	 * The amount of bits a number will be shifted to the side
@@ -97,7 +97,7 @@ public class ColorBuffer {
 		//Get the Pixel coordinate
 		int dataPos = getDataPos(x, y);
 		//Checks if the coordinate is outside of colorBuffer area
-		if(dataPos >= data.length) return;
+		if(dataPos+2 > data.length || dataPos < 0) return;
 		//Sets the individual rgb values to the corresponding place inside the array
 		data[dataPos]   = r;
 		data[dataPos+1] = g;
@@ -134,8 +134,7 @@ public class ColorBuffer {
 		//This calculates the current position in the data array, this multiplied x*3 + y*width*3
 		//This works because we know that the r position of the x coordinate is equal to y*width*3 because it simply is the equation for three full lines
 		//Then add the x coordinate to the data which is also multiplied by 3 to skip all other pixel data
-		int currentDataPosition = x*3+y*width*3;
-		return currentDataPosition;
+		return x*3+y*width*3;
 	}
 	
 	/**
@@ -146,11 +145,16 @@ public class ColorBuffer {
 	 */
 	public float[] getColor(int x, int y) {
 		
-		//Create a new float array of size = 3
-		float[] col = new float[3];
-		
 		//Gets the current Postion in the Data Array
 		int currentDataPosition = getDataPos(x,y);
+		
+		//If the currentDataPosition is either smaller or bigger than the size of the array return an array with three 0 values
+		if(currentDataPosition < 0 || currentDataPosition+2 > data.length) {
+			return new float[] {0,0,0};
+		}
+		
+		//Create a new float array of size = 3
+		float[] col = new float[3];
 		
 		//For each possible space in the array loop over the data array
 		for(int i=0; i!=3; i++) {
@@ -183,7 +187,7 @@ public class ColorBuffer {
 	
 	/**
 	 * Returns the entire colorBuffer array without any conversion taking place
-	 * @return {@link #data}
+	 * @return all the {@link #data} this Buffer contains
 	 */
 	public float[] getAll() {
 		return data;
@@ -222,7 +226,8 @@ public class ColorBuffer {
 	public int getIntRGB(int x, int y) {
 		//fetches the position inside the array
 		int dataPos = getDataPos(x, y);
-		if(dataPos > data.length) return 0;
+		//If the dataPos is outside of the data array return 0 as color
+		if(dataPos+2 > data.length || dataPos < 0) return 0;
 		//return the color from the position
 		return getIntFromDataPos(dataPos);
 	}
@@ -246,12 +251,12 @@ public class ColorBuffer {
 	 */
 	public int getIntFromColor(float red, float green, float blue){
 		//Set the Rgb equal to red
-		int rgb = (int) (red * RGB_CON);
+		int rgb = (int) (red * RGB_CONVERSION);
 		//Push the current rgb 8 bits to the left and then add the green value to the beginning of the number
 		//This basically puts the blue value to the end of the number
-		rgb = (rgb << SINGLE_BIT_SHIFT) + (int) (green * RGB_CON);
+		rgb = (rgb << SINGLE_BIT_SHIFT) + (int) (green * RGB_CONVERSION);
 		//Push the current rgb bits another 8 bits to the left and add the blue value to the number 
-		rgb = (rgb << SINGLE_BIT_SHIFT) + (int) (blue * RGB_CON);
+		rgb = (rgb << SINGLE_BIT_SHIFT) + (int) (blue * RGB_CONVERSION);
 		//Return the rgb
 		return rgb;
 	}
@@ -262,12 +267,19 @@ public class ColorBuffer {
 	 * @return an array of 3 floats between 0f - 1f which hold the color
 	 */
 	public float[] getColorFromInt(int rgbInt) {
+		//Pushes the rgbInt 16 bits to the right so red is the furthermost byte then turn off all other bytes to get the value for red
 		float red = (rgbInt >> DOUBLE_BIT_SHIFT) & 0xFF;
+		//Pushes the rgbInt 8 bits to the right so green is the furthermost byte then turn off all other bytes to get the number value for gren
 		float green = (rgbInt >> SINGLE_BIT_SHIFT) & 0xFF;
+		//Blue is already the byte furthermost right so we just have to turn all other off
 		float blue = rgbInt & 0xFF;
-		red /= RGB_CON;
-		green /= RGB_CON;
-		blue /= RGB_CON;
+		
+		//Convert the values to the used 0 to 1 system
+		red /= RGB_CONVERSION;
+		green /= RGB_CONVERSION;
+		blue /= RGB_CONVERSION;
+		
+		//Return an array of all the values
 		return new float[] {red,green,blue};
 	}
 	
