@@ -19,13 +19,13 @@ public class Transform {
 	/**
 	 * 
 	 */
-	Vec3f scaleFactor;
+	float scaleFactor;
 	
 	/**
 	 * 
 	 */
 	public Transform() {
-		this(null,null,null);
+		this(null,null,1);
 	}
 	
 	/**
@@ -33,7 +33,7 @@ public class Transform {
 	 * @param rotation
 	 */
 	public Transform(Quaternion rotation) {
-		this(rotation,null,null);
+		this(rotation,null,1);
 	}
 	
 	/**
@@ -41,7 +41,7 @@ public class Transform {
 	 * @param position
 	 */
 	public Transform(Vec3f position) {
-		this(null,position,null);
+		this(null,position,1);
 	}
 	
 	/**
@@ -50,7 +50,7 @@ public class Transform {
 	 * @param position
 	 */
 	public Transform(Quaternion rotation, Vec3f position) {
-		this(rotation,position,null);
+		this(rotation,position,1);
 	}
 
 	/**
@@ -58,14 +58,14 @@ public class Transform {
 	 * @param position
 	 * @param scale
 	 */
-	public Transform(Vec3f position, Vec3f scale) {
+	public Transform(Vec3f position, float scale) {
 		this(null,position,scale);
 	}
 
 	public Transform(Transform transform) {
 		this.rotationOfObject = new Quaternion(transform.rotationOfObject);
 		this.positionIn3dSpace = new Vec3f(transform.positionIn3dSpace);
-		this.scaleFactor = new Vec3f(transform.scaleFactor);
+		this.scaleFactor = transform.scaleFactor;
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class Transform {
 	 * @param position
 	 * @param scale
 	 */
-	public Transform(Quaternion rotation, Vec3f position, Vec3f scale) {
+	public Transform(Quaternion rotation, Vec3f position, float scale) {
 		
 		if(rotation == null) {
 			rotation = new Quaternion();
@@ -82,10 +82,6 @@ public class Transform {
 		
 		if(position == null) {
 			position = new Vec3f(0,0,0);
-		}
-		
-		if(scale == null) {
-			scale = new Vec3f(1,1,1);
 		}
 		
 		rotationOfObject = rotation;
@@ -129,7 +125,7 @@ public class Transform {
 	 * 
 	 * @return
 	 */
-	public Vec3f getScale() {
+	public float getScale() {
 		return scaleFactor;
 	}
 
@@ -137,7 +133,7 @@ public class Transform {
 	 * 
 	 * @param scaleFactor
 	 */
-	public void setScale(Vec3f scaleFactor) {
+	public void setScale(float scaleFactor) {
 		this.scaleFactor = scaleFactor;
 	}
 	

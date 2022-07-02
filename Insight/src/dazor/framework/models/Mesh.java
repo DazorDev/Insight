@@ -35,20 +35,54 @@ public class Mesh {
 	
 	public Mesh offset(Mesh mesh,Transform transform) {
 		if(mesh == null) {
-			mesh = new Mesh(this);
+			mesh = new Mesh();
 		}
-		mesh.offsetLocal(transform);
+		mesh.removeAll();
+		for(Face face : this.faces) {
+			Face tempFace = face.rotate(transform.getRotation());
+			tempFace.scale(transform.getScale());
+			tempFace.move(transform.getPosition());
+			mesh.addPolygon(tempFace);
+		}
 		return mesh;
+	}
+	
+	public void removeAll() {
+		faces = new ArrayList<>();
 	}
 	
 	public void offsetLocal(Transform transform) {
 		faces.forEach(face -> {
 			for(Vertex v : face.getVerticies()) {
-				transform.getRotation().rotateLocal(v.getPosition());
-				
-				v.getPosition().addLocal(transform.getPosition());
+				Vec3f pos = v.getPosition();
+				pos.scaleLocal(transform.getScale());
+				transform.getRotation().rotateLocal(pos);
+				pos.addLocal(transform.getPosition());
 			}
 		});
+	}
+	
+	public void center() {
+		float largestX = 0;
+		float largestY = 0;
+		float largestZ = 0;
+		for(Vec3f vertex : vertexPoints) {
+			float x = Math.abs(vertex.getX());
+			if(x > largestX) {
+				largestX = x;
+			}
+			float y = Math.abs(vertex.getX());
+			if(y > largestY) {
+				largestY = y;
+			}
+			float z = Math.abs(vertex.getX());
+			if(z > largestZ) {
+				largestZ = z;
+			}
+		}
+		Vec3f readjustmentVector = new Vec3f(largestX, largestY, largestZ);
+		readjustmentVector.scaleLocal(-0.5f);
+		offsetLocal(new Transform(readjustmentVector));
 	}
 	
 	public void addPolygon(Face face) {

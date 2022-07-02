@@ -1,6 +1,7 @@
 package dazor.test;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -35,12 +36,21 @@ import dazor.framework.math.Quaternion;
 import dazor.framework.math.Vec3f;
 import dazor.framework.models.Face;
 import dazor.framework.models.Mesh;
+import dazor.framework.util.TimeHandler;
 
 public class Test {
 	
 	static float globalScale = 1;
+	static float rotationScale = 0.001f;
+	
 	static BufferedImage image;
 	static BufferedImage newImage;
+	
+	static boolean drawUV = false;
+	static boolean paintImage = false;
+	static boolean drawWireframe = false;
+	static boolean paintFace = true;
+	
 	public static void main(String[] args) {
 		EulerAngle euler = new EulerAngle(0,0,0,1);
 		Quaternion q = new Quaternion(1,0,0,0);	
@@ -64,7 +74,17 @@ public class Test {
 		JSlider wSlider = new JSlider(JSlider.VERTICAL,-1000, 1000,0);	
 		JSlider xSlider = new JSlider(JSlider.VERTICAL,-1000, 1000,0);		
 		JSlider ySlider = new JSlider(JSlider.VERTICAL,-1000, 1000,0);		
-		JSlider zSlider = new JSlider(JSlider.VERTICAL,-1000, 1000,0);		
+		JSlider zSlider = new JSlider(JSlider.VERTICAL,-1000, 1000,0);			
+		JButton unloadButton = new JButton("Unload image");
+		unloadButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				image = null;
+				newImage = null;
+			}
+		});
+		
 		JButton fileChooserButton = new JButton("Choose File");
 		fileChooserButton.addActionListener(new ActionListener() {
 			
@@ -80,11 +100,16 @@ public class Test {
 		JTextField yField = new JTextField(20);
 		JTextField zField = new JTextField(20);
 		
+
+		JTextField yawField = new JTextField(20);
+		JTextField pitchField = new JTextField(20);
+		JTextField rollField = new JTextField(20);
+		
+		
 		ActionListener aL = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(zField.getText());
 				if(!zField.getText().equals("")) {
 					q.setZ(Integer.valueOf(zField.getText()));
 					zSlider.setValue(Integer.valueOf(zField.getText()));
@@ -113,7 +138,7 @@ public class Test {
 					if(getExtensionByStringHandling(chooser.getSelectedFile().toString()).get().equals("obj")) {
 						System.out.println("kkkk");
 						Mesh mesh = ObjLoader.load(chooser.getSelectedFile().toString());
-						view.setPolygons(mesh.getPolygons());
+						view.setMesh(mesh);
 						view.update(q, offset);
 						return;
 					}
@@ -133,14 +158,14 @@ public class Test {
 			@Override
 			public void stateChanged(ChangeEvent e) {				
 //				q.setZ(zSlider.getValue());
-//				zField.setText(String.valueOf(zSlider.getValue()));
+				zField.setText(String.valueOf(zSlider.getValue()));
 //				q.setY(ySlider.getValue());
-//				yField.setText(String.valueOf(ySlider.getValue()));
+				yField.setText(String.valueOf(ySlider.getValue()));
 //				q.setX(xSlider.getValue());
-//				xField.setText(String.valueOf(xSlider.getValue()));
+				xField.setText(String.valueOf(xSlider.getValue()));
 //				q.setW(wSlider.getValue());
-//				wField.setText(String.valueOf(wSlider.getValue()));
-				view.update(q, offset);
+				wField.setText(String.valueOf(wSlider.getValue()));
+//				view.update(q, offset);
 			}
 		};
 		
@@ -156,7 +181,6 @@ public class Test {
 			public void mousePressed(MouseEvent e) {
 				tempX = e.getX();
 				tempY = e.getY();
-				pressed = true;
 				if(e.getButton() == MouseEvent.BUTTON3) {
 					m3 = true;
 					return;
@@ -164,32 +188,30 @@ public class Test {
 				m3 = false;
 			}
 			
-			public void mouseReleased(MouseEvent e) {
-				pressed = false;
-			}
-			
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				if(m3 == true) {
-					if(!pressed) return;
 					offset.addLocal(e.getX()-tempX, e.getY()-tempY, 0);
 					view.update(q, offset);
 					tempX = e.getX();
 					tempY = e.getY();
 					return;
 				}
-//				System.out.println("mode "+euler.getMode());
-//				System.out.println("eulerX " +e.getX() + " temp " + tempX);
-				euler.add(0, -(e.getX()-tempX)*.001f,(e.getY()-tempY)*.001f);
-//
-//				System.out.println(euler.getMode());
-//				System.out.println("yaw " +euler.getYaw());
-//				System.out.println("pitch " +euler.getPitch());
-//				System.out.println("roll " +euler.getRoll());
+				euler.add(0, -(e.getX()-tempX)*rotationScale,(e.getY()-tempY)*rotationScale);
 				q.set(euler.toQuaternion());
 				view.update(q, offset);
 				tempX = e.getX();
 				tempY = e.getY();
+				wSlider.setValue((int)(q.getW()*1000));
+				xSlider.setValue((int)(q.getX()*1000));
+				ySlider.setValue((int)(q.getY()*1000));
+				zSlider.setValue((int)(q.getZ()*1000));
+				
+				yawField.setText(Float.toString(euler.getYaw()));
+				pitchField.setText(Float.toString(euler.getPitch()));
+				rollField.setText(Float.toString(euler.getRoll()));
+				
+				System.out.println(zSlider.getValue());
 			}
 			
 			
@@ -224,6 +246,9 @@ public class Test {
 		xField.setMaximumSize(wField.getPreferredSize());
 		yField.setMaximumSize(wField.getPreferredSize());
 		zField.setMaximumSize(wField.getPreferredSize());
+		yawField.setMaximumSize(wField.getPreferredSize());
+		pitchField.setMaximumSize(wField.getPreferredSize());
+		rollField.setMaximumSize(wField.getPreferredSize());
 		
 		
 		jPanel.add(wSlider);
@@ -231,10 +256,15 @@ public class Test {
 		jPanel.add(ySlider);
 		jPanel.add(zSlider);
 		jPanel.add(fileChooserButton);
+		jPanel.add(unloadButton);
 		inputPanel.add(wField);
 		inputPanel.add(xField);
 		inputPanel.add(yField);
 		inputPanel.add(zField);
+		inputPanel.add(yawField);
+		inputPanel.add(pitchField);
+		inputPanel.add(rollField);
+		
 		jPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		f.addMouseListener(ml);
 		f.addMouseMotionListener(ml);
@@ -255,6 +285,9 @@ public class Test {
 	}
 	
 	static class View extends JPanel {
+		
+		TimeHandler th = new TimeHandler();
+		
 		/**
 		 * 
 		 */
@@ -264,30 +297,14 @@ public class Test {
 		boolean processing = false;
 		public View() {
 		}
-
-		public void setFaces(ArrayList<Face> faces) {
-			oldFaces.clear();
-			processedPolygons.clear();
-			for(Face f : faces) {
-				oldFaces.add(f);
-				processedPolygons.add(new Face(f));
-			}
-		}
 		
-		public void addPolygons(ArrayList<Face> poly) {
-			oldFaces.addAll(poly);
-			processedPolygons.addAll(poly);
-		}
-		
-		public void setPolygons(ArrayList<Face> arrayList) {
-			oldFaces.clear();
-			processedPolygons.clear();
-			oldFaces.addAll(arrayList);
-			processedPolygons.addAll(arrayList);
+		public void setMesh(Mesh mesh) {
+			mesh.center();
+			oldFaces.addAll(mesh.getPolygons());
+			processedPolygons.addAll(mesh.getPolygons());
 		}
 		
 		public void update(Quaternion q, Vec3f offset) {
-			
 			processing = true;
 			if(image != null) {
 				newImage = rotateImage(image);
@@ -298,7 +315,6 @@ public class Test {
 				processedPolygons.get(i).move(offset);
 			}
 			processing = false;
-			
 			repaint();
 		}
 		
@@ -310,18 +326,27 @@ public class Test {
 			processedPolygons.sort( (f1, f2) -> {
 				return -1*Float.compare(f1.getZ(), f2.getZ());
 			});
-			if(image == null) {
-				System.out.println("no image");
-				return;
-			}
-//			newImage = rotateImage(newImage);
-//			g.drawImage(newImage, 0, 0, null);
-			processedPolygons.forEach( polygon -> {	
-//				polygon.drawUVMap(g, newImage);
-				polygon.paintImagePolygon(g, newImage);
-//				polygon.drawPolygon(g);
-			});
+			render(g,processedPolygons,newImage);
 		}
+	}
+	
+	public static void render(Graphics g, ArrayList<Face> polygons, BufferedImage image) {
+		boolean imageAvailable = image != null;
+		if(paintImage && imageAvailable) {
+			g.drawImage(image, 0, 0, null);
+		}
+		polygons.forEach( polygon -> {	
+			if(drawUV && imageAvailable) {
+				polygon.drawUVMap(g, image);
+			}
+			if(paintFace && imageAvailable) {
+				polygon.paintImagePolygon(g, image);
+			}
+			if(drawWireframe) {
+				g.setColor(Color.black);
+				polygon.drawPolygon(g);
+			}
+		});
 	}
 	
 	public static Optional<String> getExtensionByStringHandling(String filename) {

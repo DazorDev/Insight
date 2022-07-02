@@ -139,8 +139,15 @@ public class EulerAngle {
 		roll  = getValue(roll);
 	}
 	
+	private float getCurrentModulo() {
+		if(currentMode == DEGREE) {
+			return DEGREE_MODULO;
+		}
+		return RADIAN_MODULO;
+	}
+	
 	private float getValue(float value) {
-		return (value < 0) ? 360+value : value;
+		return (value < 0) ? getCurrentModulo()+value : value;
 	}
 	
 	/**
