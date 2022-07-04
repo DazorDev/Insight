@@ -120,6 +120,10 @@ public class TimeHandler {
 		return deltaTime/getModeConversion();
 	}
 	
+	public String getDeltaTimeInSecondsString() {
+		return "DeltaTime = "+ getDeltaTimeInSeconds()+"s";
+	}
+	
 	/**
 	 * Calculates the difference of time between now and the last time this function was called
 	 * It then sets the delta time equal to the currentTime - lastTime to see how many milliseconds have since then passed

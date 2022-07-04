@@ -186,7 +186,6 @@ public class Engine implements Insight {
 	private void benchMarkRun() {
 		TimeHandler th = new TimeHandler();
 		int tempCount = 0;
-		frame.createBufferStrategy(2);
 		Graphics g = frame.getGraphics();
 		while(true) {
 			th.calculateCallsPerSecond();

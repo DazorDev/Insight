@@ -124,6 +124,10 @@ public class ColorBuffer {
 		setColor(x,y,col.getVector());
 	}
 	
+	public void setColor(int x, int y, int intRGB) {
+		setColor(x,y,getColorFromInt(intRGB));
+	}
+	
 	/**
 	 * Return the current Position which pixel is targeted from x and y coordinates
 	 * @param x the x coordinate

@@ -41,7 +41,7 @@ import dazor.framework.util.TimeHandler;
 public class Test {
 	
 	static float globalScale = 1;
-	static float rotationScale = 0.001f;
+	static float rotationScale = 0.01f;
 	
 	static BufferedImage image;
 	static BufferedImage newImage;
@@ -170,7 +170,6 @@ public class Test {
 		};
 		
 		MouseAdapter ml = new MouseAdapter() {
-			boolean pressed = false;
 			
 			float tempX;
 			float tempY;
@@ -299,7 +298,9 @@ public class Test {
 		}
 		
 		public void setMesh(Mesh mesh) {
+			System.out.println(mesh.getPolygons().get(0).getVertex(0).getPosition());
 			mesh.center();
+			System.out.println(mesh.getPolygons().get(0).getVertex(0).getPosition());
 			oldFaces.addAll(mesh.getPolygons());
 			processedPolygons.addAll(mesh.getPolygons());
 		}
@@ -336,11 +337,13 @@ public class Test {
 			g.drawImage(image, 0, 0, null);
 		}
 		polygons.forEach( polygon -> {	
-			if(drawUV && imageAvailable) {
-				polygon.drawUVMap(g, image);
-			}
-			if(paintFace && imageAvailable) {
-				polygon.paintImagePolygon(g, image);
+			if(imageAvailable) {
+				if(drawUV) {
+					polygon.drawUVMap(g, image);
+				}
+				if(paintFace) {
+					polygon.paintImagePolygon(g, image);
+				}
 			}
 			if(drawWireframe) {
 				g.setColor(Color.black);

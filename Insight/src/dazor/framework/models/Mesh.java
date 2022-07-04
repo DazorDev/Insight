@@ -63,26 +63,61 @@ public class Mesh {
 	}
 	
 	public void center() {
+		//create values for every smallest and largest length in the x, y and z directions
 		float largestX = 0;
 		float largestY = 0;
 		float largestZ = 0;
+		float smallestX = 0;
+		float smallestY = 0;
+		float smallestZ = 0;
+		
+		//Create these temporary values to store the vertex points of each vertex in vertexPoints
+		float x = 0;
+		float y = 0;
+		float z = 0;
+		//Go over every single Vertexpoint and check the length of each of the directions
 		for(Vec3f vertex : vertexPoints) {
-			float x = Math.abs(vertex.getX());
-			if(x > largestX) {
-				largestX = x;
-			}
-			float y = Math.abs(vertex.getX());
-			if(y > largestY) {
-				largestY = y;
-			}
-			float z = Math.abs(vertex.getX());
-			if(z > largestZ) {
-				largestZ = z;
-			}
+			//Assign all the x,y and z values to the temporary values created outside the loop
+			x = vertex.getX();
+			y = vertex.getY();
+			z = vertex.getZ();
+
+			//Go over every single one of the of the values and check if it´s either smaller or larger than the already
+			//present value and then assign the larger value to the value storage
+			largestX  =  getBigger(largestX,  x);
+			largestY  =  getBigger(largestY,  z);
+			largestZ  =  getBigger(largestZ,  y);			
+			smallestX = getSmaller(smallestX, x);
+			smallestY = getSmaller(smallestY, y);
+			smallestZ = getSmaller(smallestZ, z);
 		}
-		Vec3f readjustmentVector = new Vec3f(largestX, largestY, largestZ);
+		Vec3f readjustmentVector = new Vec3f(largestX-Math.abs(smallestX), largestY-Math.abs(smallestY), largestZ-Math.abs(smallestZ));
 		readjustmentVector.scaleLocal(-0.5f);
 		offsetLocal(new Transform(readjustmentVector));
+	}
+	
+	/**
+	 * Return the smaller Value of the two inputs
+	 * @param storedValue
+	 * @param newValue
+	 * @return
+	 */
+	private float getSmaller(float inputValue1, float inputValue2) {
+		//Checks if inputValue2 is smaller than inputValue1
+		//If it´s smaller return inputValue2 otherwise return inputValue1
+		return inputValue2 < inputValue1 ? inputValue2 : inputValue1;
+	}
+	
+	/**
+	 * Return the bigger Value of the two inputs
+	 * @param storedValue
+	 * @param newValue
+	 * @return
+	 */
+	private float getBigger(float storedValue, float newValue) {
+		//Checks if inputValue2 is bigger than inputValue1
+		//If it´s bigger return inputValue2 otherwise return inputValue1
+		return newValue > storedValue ? newValue : storedValue;
 	}
 	
 	public void addPolygon(Face face) {

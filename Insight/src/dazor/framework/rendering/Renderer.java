@@ -9,6 +9,7 @@ import dazor.api.IShader;
 import dazor.framework.buffer.ColorBuffer;
 import dazor.framework.buffer.DepthBuffer;
 import dazor.framework.math.Vec2f;
+import dazor.framework.math.Vec3f;
 import dazor.framework.models.Camera;
 import dazor.framework.models.Mesh;
 import dazor.framework.util.TimeHandler;
@@ -102,11 +103,11 @@ public class Renderer {
 	
 	public void render(Graphics g) {
 		update();
-//		usedMeshes.forEach(mesh -> {
-//			mesh.getPolygons().forEach(polygon -> {
-//				polygon.paintImagePolygon(g,mesh.getTexture().getImage());
-//			});
-//		});
+		usedMeshes.forEach(mesh -> {
+			mesh.getPolygons().forEach(polygon -> {
+				polygon.paintImagePolygon(g,mesh.getTexture().getImage());
+			});
+		});
 		loopOverWindow();
 		copyToScreen();
 		g.drawImage(image, 0, 0, null);
@@ -122,19 +123,19 @@ public class Renderer {
 	 */
 	private void loopOverWindow() {
 		//Loop over every position of the window
-		for(int yCoordinate = 0; yCoordinate != height; yCoordinate++) {
-			for(int xCoordinate = 0; xCoordinate != width; xCoordinate++) {
+		for(int yCoordinate = 0; yCoordinate < height; yCoordinate++) {
+			for(int xCoordinate = 0; xCoordinate < width; xCoordinate++) {
 				//Create a temporary Vector for the coordiante which will be used inside the shader
 				Vec2f tempCoord = new Vec2f(xCoordinate,yCoordinate);
 				//Loop over every shader 
 				for(IShader shader : shader) {				
 					//Set the resulting color of the shader operations at the x and y position inside the colorBuffer
-					colorBuffer.setColor(xCoordinate, yCoordinate, shader.processPixel(tempCoord, colorBuffer, time));
+					Vec3f col = shader.processPixel(tempCoord, colorBuffer, time);
+					colorBuffer.setColor(xCoordinate, yCoordinate, col);	
 				}
 			}
 		}
 	}
-	
 
 	private void copyToScreen() {
 		//Loop over every position of the colorBuffer
@@ -147,7 +148,7 @@ public class Renderer {
 			}
 		}    
 	}
-
+	
 	public int getShaderAmount() {
 		return this.shader.size();
 	}
