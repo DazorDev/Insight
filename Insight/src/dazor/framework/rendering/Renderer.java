@@ -109,14 +109,14 @@ public class Renderer {
 			});
 		});
 		loopOverWindow();
-		copyToScreen();
+//		copyToScreen();
 		g.drawImage(image, 0, 0, null);
 	}
 	
 	public void addShader(IShader shader) {
 		this.shader.add(shader);
 	}
-
+	
 	/**
 	 * Loops over every single position which will be affected by the fragment / pixel shader 
 	 * for the moment it is every single position on the screen
@@ -132,22 +132,23 @@ public class Renderer {
 					//Set the resulting color of the shader operations at the x and y position inside the colorBuffer
 					Vec3f col = shader.processPixel(tempCoord, colorBuffer, time);
 					colorBuffer.setColor(xCoordinate, yCoordinate, col);	
-				}
+				}	
+				//If it is somehow out of bounds continue with the next position			
+				if(xCoordinate >=  image.getWidth() || yCoordinate >= image.getHeight()) continue;			
+				//Set the color to the image which will be rendered to the screen
+				image.setRGB(xCoordinate, yCoordinate, colorBuffer.getIntRGB(xCoordinate, yCoordinate));
 			}
 		}
 	}
 
-	private void copyToScreen() {
-		//Loop over every position of the colorBuffer
-		for(int y = 0; y!= colorBuffer.height; y++) {
-			for(int x = 0; x!= colorBuffer.width; x++) {
-				//If it is somehow out of bounds continue with the next position
-				if(x >= image.getWidth() || y >= image.getHeight()) continue;			
-				//Set the color to the image which will be rendered to the screen
-				image.setRGB(x, y, colorBuffer.getIntRGB(x, y));
-			}
-		}    
-	}
+//	private void copyToScreen() {
+//		//Loop over every position of the colorBuffer
+//		for(int y = 0; y!= colorBuffer.height; y++) {
+//			for(int x = 0; x!= colorBuffer.width; x++) {
+//
+//			}
+//		}    
+//	}
 	
 	public int getShaderAmount() {
 		return this.shader.size();

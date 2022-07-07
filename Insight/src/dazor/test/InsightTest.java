@@ -15,8 +15,8 @@ public class InsightTest {
 		insight.registerListener(new ScaleListener(insight));
 		insight.addShader(new MappingShader());
 		insight.addShader(new ColorBlendingTest());
-		insight.addShader(new OnlyGreenChannelShader());
-		insight.addShader(new GrayScaleShader());
+//		insight.addShader(new OnlyGreenChannelShader());
+//		insight.addShader(new GrayScaleShader());
 		insight.render();
 	}
 }
